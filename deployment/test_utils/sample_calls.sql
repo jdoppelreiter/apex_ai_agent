@@ -17,13 +17,13 @@ declare
  l_returnvalue  number;
 begin
   p_ai_agent_id := 1;
-  p_execution_type := ai_agent.c_conv_exec_type_user;
+  p_execution_type := ai_contants.c_conv_exec_type_user;
   p_ai_service_id := null;
   p_model := null;  
   p_system_prompt := null;
   p_user_prompt := 'https://oracle.com/12kcx0ß124mdf.html';
   p_tools := null;
-  p_history_mode := ai_agent.c_history_mode_table;
+  p_history_mode := ai_contants.c_history_mode_table;
 
   l_returnvalue := ai_agent.start_agent(p_ai_agent_id => p_ai_agent_id,
                                         p_execution_type => p_execution_type,
@@ -62,7 +62,7 @@ begin
 
   p_ai_conversation_id := 2;
 
-  l_user_question := ai_agent.get_user_question( p_ai_conversation_id => p_ai_conversation_id);
+  l_user_question := ai_conv_history.get_user_question( p_ai_conversation_id => p_ai_conversation_id);
 
   dbms_output.put_line('l_user_question = ' || l_user_question);
 

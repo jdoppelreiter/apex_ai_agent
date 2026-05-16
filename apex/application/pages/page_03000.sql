@@ -1,0 +1,171 @@
+prompt --application/pages/page_03000
+begin
+--   Manifest
+--     PAGE: 03000
+--   Manifest End
+wwv_flow_imp.component_begin (
+ p_version_yyyy_mm_dd=>'2024.11.30'
+,p_release=>'24.2.0'
+,p_default_workspace_id=>1467387009598820
+,p_default_application_id=>100
+,p_default_id_offset=>0
+,p_default_owner=>'AGENT'
+);
+wwv_flow_imp_page.create_page(
+ p_id=>3000
+,p_name=>'TickerExamples'
+,p_alias=>'TICKEREXAMPLES'
+,p_step_title=>'TickerExamples'
+,p_autocomplete_on_off=>'OFF'
+,p_page_template_options=>'#DEFAULT#'
+,p_protection_level=>'C'
+,p_page_component_map=>'03'
+);
+wwv_flow_imp_page.create_report_region(
+ p_id=>wwv_flow_imp.id(11634535519497604)
+,p_name=>'Report'
+,p_template=>2100526641005906379
+,p_display_sequence=>10
+,p_region_template_options=>'#DEFAULT#:t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc'
+,p_component_template_options=>'#DEFAULT#:t-Report--stretch:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_query_type=>'TABLE'
+,p_query_table=>'AI_CONVERSATIONS'
+,p_query_where=>'status=''RUNNING'' and rownum <= 2'
+,p_include_rowid_column=>false
+,p_ajax_enabled=>'Y'
+,p_lazy_loading=>false
+,p_query_row_template=>2538654340625403440
+,p_query_num_rows=>15
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_num_rows_type=>'NEXT_PREVIOUS_LINKS'
+,p_pagination_display_position=>'BOTTOM_RIGHT'
+,p_csv_output=>'N'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(11635647351497615)
+,p_query_column_id=>1
+,p_column_alias=>'AI_CONVERSATION_ID'
+,p_column_display_sequence=>10
+,p_column_heading=>'Ai Conversation Id'
+,p_column_alignment=>'RIGHT'
+,p_heading_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(11635766527497616)
+,p_query_column_id=>2
+,p_column_alias=>'AI_AGENT_ID'
+,p_column_display_sequence=>20
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(11635890910497617)
+,p_query_column_id=>3
+,p_column_alias=>'AI_SERVICE_ID'
+,p_column_display_sequence=>30
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(11635983217497618)
+,p_query_column_id=>4
+,p_column_alias=>'CREATION_TS'
+,p_column_display_sequence=>40
+,p_column_heading=>'Creation Ts'
+,p_heading_alignment=>'LEFT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(11636006968497619)
+,p_query_column_id=>5
+,p_column_alias=>'MODEL'
+,p_column_display_sequence=>50
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(11636131330497620)
+,p_query_column_id=>6
+,p_column_alias=>'TOOLS'
+,p_column_display_sequence=>60
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(11636255411497621)
+,p_query_column_id=>7
+,p_column_alias=>'EXECUTION_TYPE'
+,p_column_display_sequence=>70
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(11636325675497622)
+,p_query_column_id=>8
+,p_column_alias=>'HISTORY_MODE'
+,p_column_display_sequence=>80
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(11636499206497623)
+,p_query_column_id=>9
+,p_column_alias=>'STATUS'
+,p_column_display_sequence=>90
+,p_column_heading=>'Status'
+,p_heading_alignment=>'LEFT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(11636522220497624)
+,p_query_column_id=>10
+,p_column_alias=>'DERIVED$01'
+,p_column_display_sequence=>100
+,p_column_heading=>'&nbsp;'
+,p_column_html_expression=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'<c-ticker id="info-status-ticker-#AI_CONVERSATION_ID#" ',
+'          interval="3000" ',
+'          status="enabled" ',
+'          event="checkLastMessage" ',
+'          convID="#AI_CONVERSATION_ID#">',
+'</c-ticker>',
+'',
+''))
+,p_heading_alignment=>'LEFT'
+,p_derived_column=>'Y'
+,p_include_in_export=>'Y'
+);
+wwv_flow_imp_page.create_page_da_event(
+ p_id=>wwv_flow_imp.id(11637294231497631)
+,p_name=>'write ID to console'
+,p_event_sequence=>20
+,p_triggering_element_type=>'JAVASCRIPT_EXPRESSION'
+,p_triggering_element=>'document'
+,p_bind_type=>'bind'
+,p_execution_type=>'IMMEDIATE'
+,p_bind_event_type=>'custom'
+,p_bind_event_type_custom=>'checkLastMessage'
+);
+wwv_flow_imp_page.create_page_da_action(
+ p_id=>wwv_flow_imp.id(11637326061497632)
+,p_event_id=>wwv_flow_imp.id(11637294231497631)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_JAVASCRIPT_CODE'
+,p_attribute_01=>'console.log(''ID:'', this.data.convid);'
+);
+wwv_flow_imp.component_end;
+end;
+/

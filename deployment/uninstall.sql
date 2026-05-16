@@ -13,7 +13,14 @@ drop function m_ai_agent_tools;
 
 prompt # drop views 
 drop view v_tool_definitions;
+drop view v_conv_history;
 
 prompt # drop packages 
+drop package ai_constants;
+drop package ai_notifications;
+drop package ai_service;
 drop package ai_agent;
-drop package ai_tool;
+drop package ai_conv_history;
+drop package ai_conv;
+drop package ai_error;
+drop package ai_prompt;

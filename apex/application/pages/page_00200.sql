@@ -1,0 +1,126 @@
+prompt --application/pages/page_00200
+begin
+--   Manifest
+--     PAGE: 00200
+--   Manifest End
+wwv_flow_imp.component_begin (
+ p_version_yyyy_mm_dd=>'2024.11.30'
+,p_release=>'24.2.0'
+,p_default_workspace_id=>1467387009598820
+,p_default_application_id=>100
+,p_default_id_offset=>0
+,p_default_owner=>'AGENT'
+);
+wwv_flow_imp_page.create_page(
+ p_id=>200
+,p_name=>'Tools'
+,p_alias=>'TOOLS'
+,p_step_title=>'Tools'
+,p_autocomplete_on_off=>'OFF'
+,p_page_template_options=>'#DEFAULT#'
+,p_protection_level=>'C'
+,p_page_component_map=>'23'
+);
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(2734749830080732)
+,p_plug_name=>'Tools'
+,p_region_template_options=>'#DEFAULT#:t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc:margin-top-lg'
+,p_plug_template=>2072724515482255512
+,p_plug_display_sequence=>10
+,p_query_type=>'TABLE'
+,p_query_table=>'AI_TOOLS'
+,p_include_rowid_column=>false
+,p_lazy_loading=>false
+,p_plug_source_type=>'NATIVE_CARDS'
+,p_plug_query_num_rows_type=>'SCROLL'
+,p_show_total_row_count=>false
+,p_landmark_type=>'region'
+);
+wwv_flow_imp_page.create_card(
+ p_id=>wwv_flow_imp.id(9433997509456715)
+,p_region_id=>wwv_flow_imp.id(2734749830080732)
+,p_layout_type=>'GRID'
+,p_title_adv_formatting=>false
+,p_title_column_name=>'NAME'
+,p_sub_title_adv_formatting=>false
+,p_sub_title_column_name=>'IDENTIFIER'
+,p_body_adv_formatting=>true
+,p_body_html_expr=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'&DESCRIPTION!HTML.<br/>',
+'<br/>',
+'<b>Function:</b> &FUNCTION_NAME.<br>',
+'<b>Parameters required:</b> &PARAMETERS_REQUIRED.'))
+,p_second_body_adv_formatting=>false
+,p_media_adv_formatting=>false
+,p_pk1_column_name=>'AI_TOOL_ID'
+);
+wwv_flow_imp_page.create_card_action(
+ p_id=>wwv_flow_imp.id(10475489736285744)
+,p_card_id=>wwv_flow_imp.id(9433997509456715)
+,p_action_type=>'BUTTON'
+,p_position=>'PRIMARY'
+,p_display_sequence=>10
+,p_label=>'Edit Tool'
+,p_link_target_type=>'REDIRECT_PAGE'
+,p_link_target=>'f?p=&APP_ID.:250:&SESSION.::&DEBUG.:250:P250_AI_TOOL_ID:&AI_TOOL_ID.'
+,p_button_display_type=>'TEXT_WITH_ICON'
+,p_icon_css_classes=>'fa-edit'
+,p_is_hot=>true
+);
+wwv_flow_imp_page.create_card_action(
+ p_id=>wwv_flow_imp.id(11637504407497634)
+,p_card_id=>wwv_flow_imp.id(9433997509456715)
+,p_action_type=>'FULL_CARD'
+,p_display_sequence=>20
+,p_link_target_type=>'REDIRECT_PAGE'
+,p_link_target=>'f?p=&APP_ID.:250:&SESSION.::&DEBUG.:250:P250_AI_TOOL_ID:&AI_TOOL_ID.'
+);
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(2763347663715279)
+,p_plug_name=>'Breadcrumb'
+,p_region_template_options=>'#DEFAULT#:t-BreadcrumbRegion--useBreadcrumbTitle'
+,p_component_template_options=>'#DEFAULT#'
+,p_plug_template=>2531463326621247859
+,p_plug_display_sequence=>10
+,p_plug_display_point=>'REGION_POSITION_01'
+,p_menu_id=>wwv_flow_imp.id(1479605748975345)
+,p_plug_source_type=>'NATIVE_BREADCRUMB'
+,p_menu_template_id=>4072363345357175094
+);
+wwv_flow_imp_page.create_page_button(
+ p_id=>wwv_flow_imp.id(11632355258475629)
+,p_button_sequence=>20
+,p_button_name=>'CREATE_TOOL'
+,p_button_action=>'REDIRECT_PAGE'
+,p_button_template_options=>'#DEFAULT#:t-Button--iconLeft'
+,p_button_template_id=>2082829544945815391
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Create Tool'
+,p_button_redirect_url=>'f?p=&APP_ID.:250:&SESSION.::&DEBUG.:250::'
+,p_icon_css_classes=>'fa-plus-circle'
+,p_grid_new_row=>'Y'
+);
+wwv_flow_imp_page.create_page_da_event(
+ p_id=>wwv_flow_imp.id(10475691912285746)
+,p_name=>'Edit Tool Dialog Closed'
+,p_event_sequence=>10
+,p_triggering_element_type=>'JAVASCRIPT_EXPRESSION'
+,p_triggering_element=>'document'
+,p_bind_type=>'bind'
+,p_execution_type=>'IMMEDIATE'
+,p_bind_event_type=>'apexafterclosedialog'
+);
+wwv_flow_imp_page.create_page_da_action(
+ p_id=>wwv_flow_imp.id(10475727229285747)
+,p_event_id=>wwv_flow_imp.id(10475691912285746)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_imp.id(2734749830080732)
+,p_attribute_01=>'N'
+);
+wwv_flow_imp.component_end;
+end;
+/

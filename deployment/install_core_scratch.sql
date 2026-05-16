@@ -2,11 +2,15 @@ prompt # install tables
 @@../src/database/quicksql_table_creation.sql
 
 prompt # install views 
-@@../src/plsql/views/v_tool_definitions.sql
+@@install_views.sql
 
 prompt # install macros 
-@@../src/plsql/macros/m_ai_agent_tools.sql
+@@install_macros.sql‚
 
 prompt # install packages
-@@../src/plsql/packages/ai_agent.pks
-@@../src/plsql/packages/ai_agent.pkb
+@@install_packages.sql
+
+begin 
+  dbms_utility.compile_schema(user, false);
+end;
+/

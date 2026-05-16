@@ -1,0 +1,46 @@
+ai_services
+    name /nn
+    identifier vc(30) /nn
+    description
+    base_url vc(255) /nn
+    model vc(200) /nn
+    apex_ws_cred_static_id vc(200)
+    ai_service_additional_headers
+	    header_name vc(50) /nn
+	    header_value vc(400) /nn
+    ai_service_custom_endpoints
+	    code  vc(50)
+	    endpoint vc(400)
+ai_tools
+    name /nn
+    description
+    identifier vc(30) /nn
+    function_name /nn
+    parameters clob /nn
+    parameters_required vc(4000) /nn
+ai_agents
+    name /nn
+    description  
+    system_prompt clob
+    developer_prompt clob
+    examples clob
+    ai_service_id /fk ai_services 
+    default_history_mode /check TABLE,COLLECTION
+    ai_agent_tools
+        ai_tool_id /fk ai_tools
+ai_conversations
+    creation_ts tstz /nn 
+    ai_agent_id /nn /fk ai_agents
+    ai_service_id /nn /fk ai_services
+    model /nn vc(200)
+    tools clob
+    execution_type /nn vc(30) /check USER,SYSTEM
+    history_mode /nn /check TABLE,COLLECTION
+    status vc(30) /nn /check CREATED,RUNNING,FINISHED,USER_QUESTION,MAX_MESSAGES_REACHED
+ai_conversation_histories
+    creation_ts tstz /nn
+    ai_conversation_id /nn /fk ai_conversations
+    msg_type vc(20) /nn /check MESSAGE,EXCEPTION 
+    msg_direction vc(5) /nn /check IN,OUT
+    msg_role vc(200) /check SYSTEM,DEVELOPER,USER,ASSISTANT,TOOL
+    content clob

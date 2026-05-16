@@ -26,13 +26,13 @@ Package: AI_AGENT
 Function: START_AGENT
 Parameters: 
   - p_ai_agent_id     ai_agents.ai_agent_id%type
-  - p_execution_type  ai_conversations.execution_type%type default ai_agent.c_conv_exec_type_user
+  - p_execution_type  ai_conversations.execution_type%type default ai_contants.c_conv_exec_type_user
   - p_ai_service_id   ai_services.ai_service_id%type default null
   - p_model           ai_services.model%type default null
   - p_system_prompt   ai_agents.system_prompt%type default null
   - p_user_prompt     clob default null 
   - p_tools           clob default null -- json array
-  - p_history_mode    ai_conversations.history_mode%type default ai_agent.c_history_mode_table ) -- TABLE / COLLECTION 
+  - p_history_mode    ai_conversations.history_mode%type default ai_contants.c_history_mode_table ) -- TABLE / COLLECTION 
 Returns: 
   - ai_conversations.ai_conversation_id%type 
 

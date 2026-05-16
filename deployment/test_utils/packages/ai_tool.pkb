@@ -3,14 +3,16 @@ create or replace package body ai_tool as
   -- functions
   function get_version return varchar2 is
   begin
-    return c_version;
+    return ai_constants.c_version;
   end get_version;
 
   ----------------------------------------------------------------------------------------
   function get_data_from_url ( p_url  varchar2)
     return clob
   as
+    l_content CLOB;
   begin
+    /*
     return q'§23 APEX_DEBUG
                 The APEX_DEBUG package provides utility functions for managing the debug message log. Specifically, this package provides the necessary APIs to instrument and debug PL/SQL code contained within your Oracle APEX application as well as PL/SQL code in database stored procedures and functions. Instrumenting your PL/SQL code makes it much easier to track down bugs and isolate unexpected behavior more quickly.
 
@@ -45,7 +47,21 @@ create or replace package body ai_tool as
                       TOCHAR Function
                       TRACE Procedure
                       WARN Procedure§';
+    */
+    l_content := APEX_WEB_SERVICE.make_rest_request(
+                    p_url => p_url,
+                    p_http_method => 'GET');
+
+    -- Remove script/style/html tags
+    l_content := REGEXP_REPLACE(l_content, '<script[^>]*>.*?</script>', '', 1, 0, 'im');
+    l_content := REGEXP_REPLACE(l_content, '<style[^>]*>.*?</style>', '', 1, 0, 'im');
+    l_content := REGEXP_REPLACE(l_content, '<[^>]+>', ' ');
+
+    l_content := REGEXP_REPLACE(l_content, '\s+', ' ');
+
+    RETURN TRIM(l_content);
   end get_data_from_url;
+  
   ----------------------------------------------------------------------------------------
 
   function kb_create(  p_title              varchar2 
@@ -56,5 +72,7 @@ create or replace package body ai_tool as
     return 'Knowledge Base updated';
   end kb_create;
 
+  ----------------------------------------------------------------------------------------
+  
 end ai_tool;
 /
