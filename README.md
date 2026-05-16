@@ -1,70 +1,72 @@
-# Installation
+# YAAA – Yet another AI Agent
 
-deployment/install_core_scratch.sql - Installs all necessary database objects (tables, views, packages, ...)
-deployment/install_demo_data.sql - Installs a demo dataset to be used for configuration demonstration + dummy functions for tool definition (ai_tool - package)
+An AI Agent built **purely with SQL, PL/SQL and Oracle APEX**. No external frameworks are used for LLM interaction – every API call, tool dispatch and conversation history is handled inside the database.
 
-deployment/uninstall.sql - Removes all objects from database. Includes configuration and conversation histories
+The project doubles as a playground for Oracle APEX theme styles and template components.
 
-# Test case collection
+## Requirements
 
-It's recommended to install the sample data set for getting an overview of the configuration settings
+- Oracle Database 19c+ (JSON / `apex_web_service` support)
+- Oracle APEX 24.2+
+- A parsing schema (e.g. `AGENT`) with APEX privileges and ACL access to your LLM endpoint
 
-deployment/test_utils/sample_calls.sql
+## Install
 
-provides sample scripts for: 
-- starting an agent
-- getting the status of the conversation
-- get the user question of a conversation with status USER_QUESTION
-- updating conversation with user prompt
+Connect to the parsing schema with SQL*Plus / SQLcl and run:
 
-# Agent Start
+```sql
+-- 1. database objects (tables, views, macros, packages)
+@deployment/install_core_scratch.sql
+```
 
-Parameters that set to "default null" can be used to overrule the configuration of the agent. 
-E.g. executing the Agent Call with a different model or service
+Then import the APEX application from the `apex` directory:
 
-Package: AI_AGENT
-Function: START_AGENT
-Parameters: 
-  - p_ai_agent_id     ai_agents.ai_agent_id%type
-  - p_execution_type  ai_conversations.execution_type%type default ai_contants.c_conv_exec_type_user
-  - p_ai_service_id   ai_services.ai_service_id%type default null
-  - p_model           ai_services.model%type default null
-  - p_system_prompt   ai_agents.system_prompt%type default null
-  - p_user_prompt     clob default null 
-  - p_tools           clob default null -- json array
-  - p_history_mode    ai_conversations.history_mode%type default ai_contants.c_history_mode_table ) -- TABLE / COLLECTION 
-Returns: 
-  - ai_conversations.ai_conversation_id%type 
+```sql
+-- 2. APEX application (App ID 100 – YAAA)
+@apex/install.sql
+```
 
-## Restrictions
-  - p_history_mode: Only *TABLE* is currently supported
+Use `@deployment/uninstall.sql` to drop all objects, configuration and conversation history.
 
-# Tables
+## Install test data and demo tools
 
-## ai_services
-Service Definition for Inference API
+The demo dataset installs a working agent configuration plus the `ai_tool` package containing dummy functions that are referenced by the demo tools:
 
-## ai_service_additional_headers
-Used for http request header that needs to be send to the API. E.g.: for OpenAI - Bearer Token, Project, Organisation Information
-An example is installed with the demo dataset
+```sql
+@deployment/install_demo_data.sql
+```
 
-## ai_service_custom_endpoints
-Possibility for custom endpoints in case the "standard" API endpoint for completion is different. 
-Standard: /v1/chat/completions
+Shortcut to install core + demo in one go:
 
-## ai_tools
-Definition of tools inside the database. Function Name must be fully qualified if necessary (Schema, Package)
-*parameters* are added as json object, *parameters_required* as json array
+```sql
+@deployment/install_all.sql
+```
 
-## ai_agents
-Agent definition. 
-*ai_service_id* is used as default service for the agent. Can be overwritten with the API Call
+## Starting an agent
 
-## ai_agent_tools
-Assigns tools to agents
+The entry point is the `ai_agent` package. A run is created in two steps – first set it up, then start it (synchronous or as a background job):
 
-## ai_conversations
-Every Agent Start creates a new conversation including the settings of the setup for Service and used Tools
+1. `ai_agent.setup_run` – creates a new `ai_conversation` from an agent configuration. Parameters left `NULL` fall back to the values stored on the agent; passing values overrides them (e.g. different service, model or system prompt).
+2. `ai_agent.start_run` (synchronous) or `ai_agent.start_run_job` (asynchronous via DBMS_SCHEDULER) – executes the conversation using the prompt returned by `setup_run`.
 
-## ai_conversation_histories
-Stores all activities between System, User and AI Service
+While a conversation is active you can:
+
+- check progress with `ai_agent.get_conversation_status`
+- read the agent's last question with `ai_conv_history.get_user_question`
+- send a user reply with `ai_conv.continue_conversation` when the status is `USER_QUESTION`
+
+Ready-to-run examples for all four calls are in **`deployment/test_utils/sample_calls.sql`**.
+
+## Repository layout
+
+```
+apex/         APEX application export (App 100 – YAAA)
+deployment/   SQL install / uninstall scripts and demo data
+src/ddl/      Table DDL (QuickSQL)
+src/plsql/    Packages, views and SQL macros
+src/nodejs/   Optional WebSocket helper
+```
+
+## License
+
+Public repository – see source files for details.
