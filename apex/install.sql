@@ -1,5 +1,4 @@
 prompt --install
-exec apex_util.SET_SECURITY_GROUP_ID(4603234547011432);
 @@application/set_environment.sql
 @@application/delete_application.sql
 @@application/create_application.sql
