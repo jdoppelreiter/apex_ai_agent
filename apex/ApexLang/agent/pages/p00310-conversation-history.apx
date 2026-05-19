@@ -1,0 +1,572 @@
+page 310 (
+    name: Conversation History
+    alias: CONVERSATION-HISTORY
+    title: Conversation History
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+        warnOnUnsavedChanges: false
+    }
+    css {
+        inline:
+            ```css
+            .progress-wrapper {
+                width: 150px;
+                height: 10px;
+                background: #eee;
+                border-radius: 5px;
+                margin-top: 10px;
+                overflow: hidden;
+              }
+              #progress-bar {
+                width: 0%;
+                height: 100%;
+                background: #4caf50;
+                transition: width 0.1s linear;
+              }
+            ```
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        config {
+            buildOption: @commented-out
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region conversation-history-tc (
+        name: Conversation History (TC)
+        type: appTemplateComponent/conversationHistory
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select ai_conversation_history_id
+                
+                     , msg_direction
+                     , creation_ts
+                     , msg_role
+                     , tool_id
+                     , dbms_lob.substr(content,400,1)|| case when dbms_lob.getlength(content) > 400 then '...' end as content
+                     , case when msg_role = 'TOOL' then 'SUCCESS' 
+                            when msg_role = 'ASSISTANT' then 'WARN' 
+                            else 'INFO' 
+                       end as card_type
+                  from V_CONV_HISTORY
+                  where ai_conversation_id = :P310_AI_CONVERSATION_ID
+                ```
+            pageItemsToSubmit: P310_AI_CONVERSATION_ID
+        }
+        orderBy {
+            type: staticValue
+            orderByClause: "creation_ts "
+        }
+        layout {
+            sequence: 60
+            slot: body
+        }
+        appearance {
+            template: @/blank-with-attributes-no-grid
+            templateOptions: #DEFAULT#
+        }
+        accessibility {
+            landmarkType: region
+        }
+        advanced {
+            htmlDomId: AI_CONV_HISTORY
+        }
+        componentAppearance {
+            display: report
+        }
+        settings {
+            content: CONTENT
+            datetime: CREATION_TS
+            datetimeIso: CREATION_TS
+            direction: MSG_DIRECTION
+            id: AI_CONVERSATION_HISTORY_ID
+            role: MSG_ROLE
+            toolId: TOOL_ID
+            toolIdBadgeClass: AI_CONVERSATION_HISTORY_ID
+            type: CARD_TYPE
+        }
+        rowSelection {
+            type: singleSelection
+            currentSelectionPageItem: P310_TIMELINE_SELECTED
+        }
+
+        column AI_CONVERSATION_HISTORY_ID (
+            layout {
+                sequence: 10
+            }
+            source {
+                databaseColumn: AI_CONVERSATION_HISTORY_ID
+                dataType: number
+                primaryKey: true
+            }
+        )
+
+        column CARD_TYPE (
+            layout {
+                sequence: 60
+            }
+            source {
+                databaseColumn: CARD_TYPE
+                dataType: varchar2
+            }
+        )
+
+        column CONTENT (
+            layout {
+                sequence: 50
+            }
+            source {
+                databaseColumn: CONTENT
+                dataType: varchar2
+            }
+        )
+
+        column CREATION_TS (
+            layout {
+                sequence: 30
+            }
+            source {
+                databaseColumn: CREATION_TS
+                dataType: timestampWithTimeZone
+            }
+            appearance {
+                formatMask: DD.MM.YYYY HH24:MI:SS
+            }
+        )
+
+        column MSG_DIRECTION (
+            layout {
+                sequence: 20
+            }
+            source {
+                databaseColumn: MSG_DIRECTION
+                dataType: varchar2
+            }
+        )
+
+        column MSG_ROLE (
+            layout {
+                sequence: 40
+            }
+            source {
+                databaseColumn: MSG_ROLE
+                dataType: varchar2
+            }
+        )
+
+        column TOOL_ID (
+            layout {
+                sequence: 70
+            }
+            source {
+                databaseColumn: TOOL_ID
+                dataType: varchar2
+            }
+        )
+
+    )
+
+    region p310-ai-agent-name (
+        name: &P310_AI_AGENT_NAME.
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                Started at <b>&P310_CONVERSATION_CREATED.</b><br/>
+                using model <b>&P310_CONVERSATION_MODEL.</b></br>
+                using service <b>&P310_CONVERSATION_SERVICE.</b>
+                <br/>
+                status: <b><span id="info-status">&P310_CONVERSATION_STATUS.</span></b>
+                <br/>
+                <c-ticker id="info-status-ticker" interval="3000" status="disabled" event="checkLastMessage"></c-ticker> 
+                ```
+        }
+        layout {
+            sequence: 40
+            slot: body
+        }
+        appearance {
+            template: @/hero
+            templateOptions: [
+                #DEFAULT#
+                t-HeroRegion--hideIcon
+            ]
+            renderComponents: belowContent
+        }
+        advanced {
+            htmlDomId: INFO-STATUS-REGION
+        }
+        comments {
+            comments:
+                ```
+                <div id="status">
+                  <div>Next check in: <span id="countdown"></span>s</div>
+                  <div class="progress-wrapper">
+                    <div id="progress-bar"></div>
+                  </div>
+                </div>
+                ```
+        }
+    )
+
+    region status (
+        name: Status
+        type: staticContent
+        layout {
+            sequence: 30
+            slot: body
+        }
+    )
+
+    pageItem P310_AI_AGENT_NAME (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @status
+            slot: regionBody
+        }
+    )
+
+    pageItem P310_AI_CONVERSATION_ID (
+        type: hidden
+        layout {
+            sequence: 20
+            region: @status
+            slot: regionBody
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P310_CONVERSATION_CREATED (
+        type: hidden
+        layout {
+            sequence: 30
+            region: @status
+            slot: regionBody
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P310_CONVERSATION_MODEL (
+        type: hidden
+        layout {
+            sequence: 40
+            region: @status
+            slot: regionBody
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P310_CONVERSATION_SERVICE (
+        type: hidden
+        layout {
+            sequence: 50
+            region: @status
+            slot: regionBody
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P310_CONVERSATION_STATUS (
+        type: hidden
+        layout {
+            sequence: 70
+            region: @status
+            slot: regionBody
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P310_DO_RELOAD (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @conversation-history-tc
+            slot: regionBody
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P310_IS_FINISHED (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @conversation-history-tc
+            slot: regionBody
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P310_LAST_LOADED_CONV_HIST_ID (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 60
+            region: @status
+            slot: regionBody
+        }
+    )
+
+    pageItem P310_TIMELINE_SELECTED (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @conversation-history-tc
+            slot: regionBody
+        }
+    )
+
+    dynamicAction check-changed-selection (
+        name: Check changed selection
+        execution {
+            sequence: 60
+            eventScope: dynamic
+        }
+        when {
+            selectionType: items
+            items: P310_TIMELINE_SELECTED
+        }
+        clientSideCondition {
+            type: jsExpression
+            javaScriptExpression: "apex.items.P310_TIMELINE_SELECTED.getValue() != \"\" "
+        }
+
+        action open-modal (
+            name: OPEN_MODAL
+            action: submitPage
+            settings {
+                requestButtonName: OPEN_MODAL
+                showProcessing: false
+            }
+            execution {
+                sequence: 40
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    dynamicAction check-last-message (
+        name: Check last message
+        execution {
+            sequence: 30
+        }
+        when {
+            event: custom
+            customEvent: checkLastMessage
+            selectionType: jsExpression
+            javaScriptExpression: document
+        }
+
+        action native-execute-plsql-code (
+            action: executeServerSideCode
+            settings {
+                plsqlCode:
+                    ```plsql
+                    declare 
+                      l_current_id  ai_conversation_histories.ai_conversation_history_id%type;
+                      l_status      ai_conversations.status%type;
+                    begin 
+                    
+                      select ai_conversation_history_id 
+                        into l_current_id
+                        from ai_conversation_histories 
+                        where ai_conversation_id = :P310_AI_CONVERSATION_ID
+                        order by creation_ts desc 
+                        fetch first 1 row only;  
+                    
+                      if nvl(:P310_LAST_LOADED_CONV_HIST_ID,-1) != nvl(l_current_id,-1) then 
+                        :P310_LAST_LOADED_CONV_HIST_ID := l_current_id;
+                        :P310_DO_RELOAD := 'Y';
+                    
+                        :P310_CONVERSATION_STATUS := ai_conv.get_conversation_status( p_ai_conversation_id => :P310_AI_CONVERSATION_ID ); 
+                        
+                      else 
+                        :P310_DO_RELOAD := 'N';
+                      end if;
+                    end;
+                    ```
+                itemsToSubmit: P310_AI_CONVERSATION_ID
+                itemsToReturn: [
+                    P310_LAST_LOADED_CONV_HIST_ID
+                    P310_DO_RELOAD
+                    P310_CONVERSATION_STATUS
+                ]
+                showProcessing: true
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+        action native-javascript-code (
+            action: executeJsCode
+            settings {
+                jsCode:
+                    ```javascript-browser
+                    if( apex.items.P310_DO_RELOAD.getValue() == 'Y' ){
+                      apex.items.P310_DO_RELOAD.setValue('N');
+                      apex.regions.AI_CONV_HISTORY.refresh();
+                    }
+                    
+                    if( apex.items.P310_CONVERSATION_STATUS.getValue() == 'FINISHED' ){
+                      $("#info-status-ticker").attr('status', 'disabled');
+                      $("#info-status").text("FINISHED");
+                    } else if ( $("#info-status-ticker").attr('status') === 'disabled') {
+                      $("#info-status-ticker").attr('status', 'enabled');
+                    }
+                    ```
+            }
+            execution {
+                sequence: 20
+            }
+        )
+
+    )
+
+    dynamicAction selected-id-is-null (
+        name: Selected ID Is null
+        execution {
+            sequence: 10
+        }
+        when {
+            selectionType: items
+            items: P310_SELECTED_ID
+        }
+        clientSideCondition {
+            type: itemIsNull
+            item: P310_SELECTED_ID
+        }
+
+        action native-execute-plsql-code (
+            action: executeServerSideCode
+            settings {
+                plsqlCode:
+                    ```plsql
+                    select content 
+                      into :P310_CONTENT 
+                      from v_conv_history
+                      where ai_conversation_history_id = :P310_SELECTED_ID;
+                    ```
+                itemsToSubmit: P310_SELECTED_ID
+                itemsToReturn: P310_CONTENT
+                showProcessing: true
+            }
+            execution {
+                sequence: 60
+                fireWhenEventResultIs: false
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    process load-infos (
+        name: Load Infos
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                select to_char(c.creation_ts,'DD.MM.YYYY HH24:MI:SS') as created_at
+                     , c.model
+                     , s.name as service
+                     , c.status
+                     , a.name
+                  into :P310_CONVERSATION_CREATED
+                     , :P310_CONVERSATION_MODEL
+                     , :P310_CONVERSATION_SERVICE
+                     , :P310_CONVERSATION_STATUS
+                     , :P310_AI_AGENT_NAME
+                  from ai_conversations c
+                  join ai_services s on c.ai_service_id = s.ai_service_id 
+                  join ai_agents a on c.ai_agent_id = a.ai_agent_id
+                  where c.ai_conversation_id = :P310_AI_CONVERSATION_ID;
+                  
+                
+                
+                ```
+        }
+        execution {
+            sequence: 10
+            point: afterHeader
+        }
+        advanced {
+            executionMappingIdentifier: 2690442814681627
+        }
+    )
+
+    branch (
+        name: Go To Page 200
+        execution {
+            sequence: 10
+        }
+        behavior {
+            target: {
+                page: 320
+                items: {
+                    P320_AI_CONVERSATION_HISTORY_ID: &P310_TIMELINE_SELECTED.
+                }
+                clearCache: 320
+            }
+        }
+    )
+
+)
+

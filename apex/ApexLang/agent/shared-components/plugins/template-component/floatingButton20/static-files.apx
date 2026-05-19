@@ -1,0 +1,40 @@
+file "css/floating_button.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "css/floating_button.min.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "css/floating_button_actions.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "css/floating_button_actions.min.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "js/floating_button.js" (
+    mimeType: text/javascript
+    charSet: utf-8
+)
+
+file "js/floating_button.min.js" (
+    mimeType: text/javascript
+    charSet: utf-8
+)
+
+file "js/floating_button_actions.js" (
+    mimeType: text/javascript
+    charSet: utf-8
+)
+
+file "js/floating_button_actions.min.js" (
+    mimeType: text/javascript
+    charSet: utf-8
+)
+

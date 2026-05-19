@@ -1,0 +1,57 @@
+/* ============================================================
+   Styles for the minimal action-button clones injected into the
+   FAB by fab_action_buttons.js. The original button stays in
+   its place untouched - these rules only style the clone, which
+   lives inside .fab-container.
+
+   DOM after injection:
+      .fab-container
+         .sub-buttons[role="menu"]
+            .progress-items                            (bridge)
+            .sub-button.fab-action-wrap[role="none"]   <-- this scope
+               button.fab-action-button[role="menuitem"]
+                  span.fa.fa-XXX
+            .sub-button (original FAB icons)
+   ============================================================ */
+
+/* The wrapper inherits the round 50x50 host look from .sub-button
+   (set in fab.css), including the default background colour
+   var(--ut-palette-primary). Users who want a per-action colour
+   can target .fab-action-wrap[data-fab-action-key="..."] in
+   their own CSS - the key is the original button's id. */
+
+/* The cloned button is a bare <button> we built from scratch -
+   no APEX classes, no inline styles. So we only need to set the
+   round-icon-button look; there's no t-Button chrome to defeat. */
+.fab-container .fab-action-wrap > button.fab-action-button {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 100%;
+   height: 100%;
+   margin: 0;
+   padding: 0;
+   border: 0;
+   background: transparent;
+   color: white;
+   border-radius: 50%;
+   font: inherit;
+   cursor: pointer;
+}
+
+/* Match the icon sizing used by the original FAB sub-buttons
+   (see fab.css `.fab-container .sub-button .fa`). */
+.fab-container .fab-action-wrap .fa {
+   color: white;
+   font-size: 1.275rem;;
+   font-weight: 600;
+   line-height: 1;
+   padding-top: 1px; /* matches fab.css .sub-button .fa nudge */
+}
+
+/* Visible focus indicator, matching FAB.css's pattern. */
+.fab-container .fab-action-wrap > button.fab-action-button:focus-visible {
+   outline: 3px solid #ffffff;
+   outline-offset: 2px;
+   box-shadow: 0 0 0 5px var(--ut-palette-primary);
+}

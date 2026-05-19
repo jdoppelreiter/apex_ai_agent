@@ -1,0 +1,70 @@
+app AGENT (
+    name: YAAA (Yet another AI Agent)
+    logo {
+        type: text
+        text: YAAA
+    }
+    navigation {
+        homeUrl: {
+            page: 1
+        }
+        loginUrl: {
+            page: LOGIN
+        }
+    }
+    navigationMenu {
+        listTemplate: @/top-navigation-menu
+        templateOptions: [
+            #DEFAULT#
+            js-tabLike
+        ]
+        listPosition: top
+        list: @navigation-menu
+    }
+    navigationBar {
+        list: @navigation-bar
+        listTemplate: @/navigation-bar
+        templateOptions: #DEFAULT#
+    }
+    userInterface {
+        currentTheme: @universal-theme
+        globalPage: 0
+        addBuiltWithApexToFooter: false
+    }
+    appFormatMasks {
+        date: DS
+        timestamp: DS
+        timestampTimeZone: DS
+    }
+    javaScript {
+        fileUrls: [
+            #APP_FILES#js/helper#MIN#.js
+            #APP_FILES#js/webComponents/c-ticker#MIN#.js
+        ]
+    }
+    authentication {
+        scheme: @builder
+        publicUser: APEX_PUBLIC_USER
+    }
+    sessionStateProtection {
+        checksumSalt: 6B45F3C48FBB16500A99827B7D492575A4EE799846390B2A54B8A9C35B50D376
+    }
+    runtime {
+        allowFeedback: true
+        compatibilityMode: 24.2
+    }
+    availability {
+        status: available
+    }
+    advanced {
+        modernizeApp: true
+    }
+
+    substitution APP_NAME (
+        value {
+            staticValue: Agent
+        }
+    )
+
+)
+

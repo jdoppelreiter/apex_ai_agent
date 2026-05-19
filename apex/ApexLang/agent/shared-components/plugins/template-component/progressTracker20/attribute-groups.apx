@@ -1,0 +1,8 @@
+attributeGroup generalSettings (
+    name: General Settings
+    sequence: 1
+    advanced {
+        staticId: general-settings
+    }
+)
+

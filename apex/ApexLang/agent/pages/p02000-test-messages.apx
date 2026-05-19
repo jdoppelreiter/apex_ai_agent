@@ -1,0 +1,54 @@
+page 2000 (
+    name: test messages
+    alias: TEST-MESSAGES
+    title: test messages
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    button submit-ok (
+        buttonName: SUBMIT_OK
+        label: Submit Ok
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+        }
+    )
+
+    process new (
+        name: New
+        type: executeCode
+        source {
+            plsqlCode: null;
+        }
+        execution {
+            sequence: 10
+        }
+        successMessage {
+            successMessage: This is a success message
+        }
+        advanced {
+            executionMappingIdentifier: 11634415720497603
+        }
+        serverSideCondition {
+            whenButtonPressed: @submit-ok
+        }
+    )
+
+)
+

@@ -1,0 +1,50 @@
+plugin conversationHistory (
+    name: Conversation History
+    staticId: TC_YAAA_CONVERSATION_HISTORY
+    templateComponent {
+        availableAs: report
+        partial:
+            ```html
+            {if APEX$IS_LAZY_LOADING/}
+              <div></div>
+            {else/}
+              <article
+                class="yaaa-agent-card type-#TYPE#"
+                data-row-id="#ID#"
+                data-tool-id="#TOOL_ID#"
+              >
+                <header class="yaaa-agent-card__meta">
+                  <div class="yaaa-agent-card__badges">
+                    <span class="yaaa-badge yaaa-badge--direction">#DIRECTION#</span>
+                    <span class="yaaa-badge yaaa-badge--role">#ROLE#</span>
+                  </div>
+                  <div class="yaaa-agent-card__meta-right">
+                    {if TOOL_ID/}<span class="yaaa-badge yaaa-badge--tool">Tool-ID: #TOOL_ID#</span>{endif/}
+                    <time class="yaaa-datetime" datetime="#DATETIME_ISO#">#DATETIME#</time>
+                  </div>
+                </header>
+            
+                <div class="yaaa-agent-card__content">
+                  <p class="yaaa-agent-card__excerpt">#CONTENT#</p>
+                </div>
+              </article>
+            {endif/}
+            ```
+        reportBody: <div class="yaaa-conv-history-cards">#APEX$ROWS#</div>
+        reportRow: <div class="yaaa-agent-card-row" #APEX$ROW_IDENTIFICATION#>#APEX$PARTIAL#</div>
+        numberOfLazyLoadingSkeletons: 3
+    }
+    component {
+        standardAttributes: [
+            rowSelection
+            regionTemplateAttr
+        ]
+    }
+    css {
+        fileUrls: #PLUGIN_FILES#css/tc-yaaa-conv-card#MIN#.css
+    }
+    information {
+        version: 1.0
+    }
+)
+

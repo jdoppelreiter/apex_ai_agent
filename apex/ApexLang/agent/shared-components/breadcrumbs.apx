@@ -1,0 +1,86 @@
+breadcrumb breadcrumb (
+    name: Breadcrumb
+
+    entry agents (
+        name: Agents
+        pageNumber: 100
+        execution {
+            sequence: 10
+        }
+        link {
+            target: {
+                page: 100
+            }
+        }
+    )
+
+    entry conversation-history (
+        name: Conversation History
+        pageNumber: 310
+        execution {
+            sequence: 10
+        }
+        appearance {
+            parentEntry: @conversations
+        }
+        link {
+            target: {
+                page: 310
+            }
+        }
+    )
+
+    entry conversations (
+        name: Conversations
+        pageNumber: 300
+        execution {
+            sequence: 10
+        }
+        link {
+            target: {
+                page: 300
+            }
+        }
+    )
+
+    entry home (
+        name: Home
+        pageNumber: 1
+        execution {
+            sequence: 10
+        }
+        link {
+            target: {
+                page: 1
+            }
+        }
+    )
+
+    entry services (
+        name: Services
+        pageNumber: 50
+        execution {
+            sequence: 10
+        }
+        link {
+            target: {
+                page: 50
+            }
+        }
+    )
+
+    entry tools (
+        name: Tools
+        pageNumber: 200
+        execution {
+            sequence: 10
+        }
+        link {
+            target: {
+                page: 200
+            }
+        }
+    )
+
+)
+

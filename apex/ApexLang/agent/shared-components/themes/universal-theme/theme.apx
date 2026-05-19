@@ -1,0 +1,76 @@
+theme universal-theme (
+    name: Universal Theme
+    themeNumber: 42
+    baseTheme: ut-24.2
+    style {
+        currentThemeStyle: @tech-dark
+    }
+    javaScript {
+        fileUrls: [
+            #APEX_FILES#libraries/apex/#MIN_DIRECTORY#widget.stickyWidget#MIN#.js?v=#APEX_VERSION#
+            #THEME_FILES#js/theme42#MIN#.js?v=#APEX_VERSION#
+        ]
+    }
+    css {
+        fileUrls: #THEME_FILES#css/Core#MIN#.css?v=#APEX_VERSION#
+    }
+    componentDefaults {
+        page: @/standard
+        navigationBarList: @/navigation-bar
+        navigationMenuListPosition: side
+        navigationMenuListTop: @/top-navigation-menu
+        navigationMenuListSide: @/side-navigation-menu
+        loginPage: @/login
+        errorPage: @/login
+        printerFriendlyPage: @/standard
+        breadcrumb: @/breadcrumb
+        button: @/text
+        defaultLabel: @/optional-floating
+        optionalLabel: @/optional-floating
+        requiredLabel: @/required-floating
+        list: @/links-list
+        region: @/standard
+        classicReport: @/standard
+    }
+    regionDefaults {
+        breadcrumbs: @/title-bar
+        charts: @/standard
+        forms: @/standard
+        lists: @/standard
+        reports: @/standard
+        wizards: @/standard
+        interactiveReports: @/interactive-report
+    }
+    dialogDefaults {
+        dialogContentRegion: @/blank-with-attributes
+        dialogButtonRegion: @/buttons-container
+        dialogPage: @/modal-dialog
+    }
+    icons {
+        library: fontApex
+    }
+    advanced {
+        filePrefix: #APEX_FILES#themes/theme_42/24.2/
+        identifier: UNIVERSAL_THEME
+    }
+
+    style tech-dark (
+        name: Tech Dark
+        css {
+            fileUrls: [
+                #APP_FILES#css/dark/custom_styles#MIN#.css
+                #APP_FILES#fonts/font.css
+            ]
+        }
+        themeRollerAttributes {
+            inputParameterFileUrls: #THEME_FILES#less/theme/Vita-Dark.less
+            outputCssFileUrl: #THEME_DB_FILES#9240199621002640.css
+            jsonConfig: "{\"classes\":[],\"vars\":{\"@g_Accent-BG\":\"#055f76\",\"@g_Accent-OG\":\"#181414\",\"@g_Danger-BG\":\"#f87171\",\"@g_Danger-FG\":\"#ffffff\",\"@g_Warning-BG\":\"#fbbf24\",\"@g_Warning-FG\":\"#000000\",\"@g_Success-BG\":\"#198960\",\"@g_Success-FG\":\"#ffffff\",\"@g_Info-BG\":\"#38bdf8\",\"@g_Info-FG\":\"#ffffff\",\"@g_Region-Header-BG\":\"#111d2b\",\"@g_Region-Header-FG\":\"#f0f6ff\",\"@g_Region-BG\":\"#111d2b\",\"@g_Region-FG\":\"#e7fbff\",\"@g_Container-BorderRadius\":\"10px\",\"@g_Body-Content-Max-Width\":\"1440px\",\"@g_Button-BorderRadius\":\"8px\",\"@g_Link-Base\":\"#0cbbe7\",\"@g_Nav-BG\":\"#060d14\",\"@g_Nav-FG\":\"#d4d8d9\",\"@g_Nav-Active-BG\":\"#055f76\",\"@g_Nav-Active-FG\":\"#f2f2f2\"},\"customCSS\":\"\",\"useCustomLess\":\"N\"}"
+        }
+        advanced {
+            endUserCanPick: true
+        }
+    )
+
+)
+

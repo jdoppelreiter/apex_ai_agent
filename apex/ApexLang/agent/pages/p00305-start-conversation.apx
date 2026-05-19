@@ -1,0 +1,392 @@
+page 305 (
+    name: Start Conversation
+    alias: START-CONVERSATION
+    title: Start Conversation
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/modal-dialog
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+        warnOnUnsavedChanges: false
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region agent-tools (
+        name: Agent Tools
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select ait.ai_tool_id
+                      ,ait.name
+                      ,ait.description
+                      ,ait.function_name
+                      ,ait.parameters
+                      ,ait.parameters_required
+                  from ai_tools ait 
+                  join ai_agent_tools aiat on ait.ai_tool_id = aiat.ai_tool_id
+                  where aiat.ai_agent_id = :P305_AI_AGENT
+                ```
+            pageItemsToSubmit: P305_AI_AGENT
+        }
+        layout {
+            sequence: 20
+            slot: contentBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--noBorder
+                t-Region--scrollBody
+            ]
+        }
+        title {
+            column: NAME
+        }
+        subtitle {
+            column: DESCRIPTION
+        }
+        body {
+            advancedFormatting: true
+            htmlExpression:
+                ```html
+                Function: &FUNCTION_NAME.<br/>
+                Parameters required: &PARAMETERS_REQUIRED.
+                ```
+        }
+    )
+
+    region setup (
+        name: Setup
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: contentBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--removeHeader js-removeLandmark
+                t-Region--noBorder
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    pageItem P305_AI_AGENT (
+        type: selectList
+        label {
+            label: Agent
+            alignment: left
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery: select name, ai_agent_id from ai_agents
+        }
+        layout {
+            sequence: 10
+            region: @setup
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+            height: 1
+        }
+        validation {
+            valueRequired: true
+        }
+    )
+
+    pageItem P305_BG_PROCESS_ID (
+        type: hidden
+        layout {
+            sequence: 70
+            region: @setup
+            slot: regionBody
+        }
+    )
+
+    pageItem P305_CONVERSATION_ID (
+        type: hidden
+        layout {
+            sequence: 50
+            region: @setup
+            slot: regionBody
+        }
+    )
+
+    pageItem P305_MODEL (
+        type: textField
+        label {
+            label: Model
+            alignment: left
+        }
+        layout {
+            sequence: 30
+            region: @setup
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+            width: 30
+        }
+        validation {
+            valueRequired: true
+        }
+    )
+
+    pageItem P305_PROMPT (
+        type: hidden
+        layout {
+            sequence: 60
+            region: @setup
+            slot: regionBody
+        }
+        sessionState {
+            dataType: clob
+        }
+    )
+
+    pageItem P305_SERVICE (
+        type: selectList
+        label {
+            label: Service
+            alignment: left
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery: select name, ai_service_id from ai_services
+            displayExtraValues: false
+            displayNullValue: false
+        }
+        cascadingLov {
+            parentItems: P305_AI_AGENT
+        }
+        layout {
+            sequence: 20
+            region: @setup
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+            height: 1
+        }
+        validation {
+            valueRequired: true
+        }
+    )
+
+    pageItem P305_USER_PROMPT (
+        type: textarea
+        label {
+            label: User Prompt
+            alignment: left
+        }
+        layout {
+            sequence: 40
+            region: @setup
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+            height: 10
+        }
+        default {
+            type: static
+            staticValue: https://docs.oracle.com/en/database/oracle/apex/24.2/aeapi/APEX_DEBUG.html
+        }
+    )
+
+    button start (
+        buttonName: Start
+        label: Start
+        layout {
+            sequence: 30
+            slot: contentBody
+            startNewRow: false
+            newColumn: false
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+            ]
+            icon: fa-play-circle
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+        }
+    )
+
+    dynamicAction set-model (
+        name: Set model
+        execution {
+            sequence: 10
+        }
+        when {
+            selectionType: items
+            items: P305_SERVICE
+        }
+
+        action native-execute-plsql-code (
+            action: executeServerSideCode
+            settings {
+                plsqlCode:
+                    ```plsql
+                    select max(model)
+                      into :P305_MODEL 
+                      from ai_services
+                      where ai_service_id = :P305_SERVICE;
+                    ```
+                itemsToSubmit: P305_SERVICE
+                itemsToReturn: P305_MODEL
+                showProcessing: true
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+        action native-refresh (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @agent-tools
+            }
+            execution {
+                sequence: 20
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    process knowledge-base-update (
+        name: Knowledge Base Update
+        type: executionChain
+        backgroundExecution {
+            runInBackground: true
+            returnIdIntoItem: P305_BG_PROCESS_ID
+        }
+        execution {
+            sequence: 20
+        }
+        advanced {
+            executionMappingIdentifier: 2965575288013817
+        }
+    )
+
+    process run (
+        name: Run
+        type: executeCode
+        executionChain: @knowledge-base-update
+        source {
+            plsqlCode:
+                ```plsql
+                 ai_agent.start_run( p_ai_conversation_id => :P305_CONVERSATION_ID
+                                   , p_prompt             => :P305_PROMPT );
+                ```
+        }
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 2965685429013818
+        }
+    )
+
+    process setup (
+        name: Setup
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                declare
+                  p_ai_agent_id number;
+                  p_execution_type varchar2(120);
+                  p_ai_service_id number;
+                  p_model varchar2(800); 
+                  p_system_prompt clob;
+                  p_user_prompt clob;
+                  p_tools clob;
+                  p_history_mode varchar2(100);
+                begin
+                  p_ai_agent_id := :P305_AI_AGENT;
+                  p_execution_type := ai_constants.c_conv_exec_type_user;
+                  p_ai_service_id := :P305_SERVICE;
+                  p_model := :P305_MODEL;  
+                  p_system_prompt := null;
+                  p_user_prompt := :P305_USER_PROMPT;
+                  p_tools := null;
+                  p_history_mode := ai_constants.c_history_mode_table;
+                
+                  ai_agent.setup_run( p_ai_agent_id => p_ai_agent_id
+                                    , p_execution_type => p_execution_type
+                                    , p_ai_service_id => p_ai_service_id
+                                    , p_model => p_model
+                                    , p_system_prompt => p_system_prompt
+                                    , p_user_prompt => p_user_prompt
+                                    , p_tools => p_tools
+                                    , p_history_mode => p_history_mode
+                                    , p_ai_conversation_id_o  => :P305_CONVERSATION_ID
+                                    , p_prompt_o => :P305_PROMPT);
+                
+                 
+                end;
+                
+                ```
+        }
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 2733575338080720
+        }
+        serverSideCondition {
+            whenButtonPressed: @start
+        }
+    )
+
+    branch (
+        execution {
+            sequence: 10
+        }
+        behavior {
+            target: {
+                page: 310
+                items: {
+                    P310_AI_CONVERSATION_ID: &P305_CONVERSATION_ID.
+                }
+                clearCache: 310
+            }
+        }
+        serverSideCondition {
+            whenButtonPressed: @start
+        }
+    )
+
+)
+

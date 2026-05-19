@@ -1,0 +1,139 @@
+page 50 (
+    name: Services
+    alias: SERVICES
+    title: Services
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region services (
+        name: Services
+        type: cards
+        source {
+            location: localDatabase
+            tableName: AI_SERVICES
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
+                margin-top-lg
+            ]
+        }
+        title {
+            column: NAME
+        }
+        subtitle {
+            column: IDENTIFIER
+        }
+        body {
+            advancedFormatting: true
+            htmlExpression:
+                ```html
+                &DESCRIPTION!HTML.<br/>
+                Model: &MODEL.
+                ```
+        }
+        secondaryBody {
+            column: BASE_URL
+        }
+
+        action action (
+            label: Edit Service
+            layout {
+                sequence: 10
+            }
+            behavior {
+                target: {
+                    page: 55
+                    items: {
+                        P55_AI_SERVICE_ID: &AI_SERVICE_ID.
+                    }
+                    clearCache: 55
+                }
+            }
+            appearance {
+                displayType: textWithIcon
+                icon: fa-edit
+                hot: true
+            }
+        )
+
+    )
+
+    button create-service (
+        buttonName: CREATE_SERVICE
+        label: Create Service
+        layout {
+            sequence: 20
+            slot: body
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+            ]
+            icon: fa-plus-circle
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 55
+                clearCache: 55
+            }
+            warnOnUnsavedChanges: doNotCheck
+        }
+    )
+
+    dynamicAction dialog-closed (
+        name: Dialog Closed
+        execution {
+            sequence: 10
+        }
+        when {
+            event: apexafterclosecanceldialog
+            selectionType: jsExpression
+            javaScriptExpression: document
+        }
+    )
+
+)
+

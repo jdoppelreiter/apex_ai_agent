@@ -1,0 +1,30 @@
+file progress_fab_bridge.js (
+    mimeType: text/javascript
+    charSet: utf-8
+)
+
+file progress_fab_bridge.min.js (
+    mimeType: text/javascript
+    charSet: utf-8
+)
+
+file progress_tracker.css (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file progress_tracker.js (
+    mimeType: text/javascript
+    charSet: utf-8
+)
+
+file progress_tracker.min.css (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file progress_tracker.min.js (
+    mimeType: text/javascript
+    charSet: utf-8
+)
+

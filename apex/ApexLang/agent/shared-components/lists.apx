@@ -1,0 +1,160 @@
+list navigation-bar (
+    name: Navigation Bar
+
+    entry app-user (
+        label: &APP_USER.
+        icon {
+            imageIconCssClasses: fa-user
+        }
+        layout {
+            sequence: 90
+        }
+        link {
+            target: {
+                type: url
+                url: #
+            }
+        }
+        userDefinedAttributes {
+            2: has-username
+        }
+    )
+
+    entry nbsp (
+        label: &nbsp;
+        icon {
+            imageIconCssClasses: fa-accordion
+        }
+        layout {
+            sequence: 100
+            subentriesList: @navigation-menu
+        }
+        link {
+            target: {
+                type: url
+                url: #
+            }
+        }
+        userDefinedAttributes {
+            2: hidden-md-up
+        }
+    )
+
+    entry sign-out (
+        label: Sign Out
+        icon {
+            imageIconCssClasses: fa-sign-out
+        }
+        layout {
+            sequence: 30
+            parentEntry: @app-user
+        }
+        link {
+            target: {
+                type: url
+                url: &LOGOUT_URL.
+            }
+        }
+        serverSideCondition {
+            type: userIsAuthenticated
+        }
+    )
+
+)
+
+list navigation-menu (
+    name: Navigation Menu
+
+    entry agents (
+        label: Agents
+        icon {
+            imageIconCssClasses: fa-ai-microchip
+        }
+        layout {
+            sequence: 25
+        }
+        isCurrent {
+            type: pages
+            pages: 100
+        }
+        link {
+            target: {
+                page: 100
+            }
+        }
+    )
+
+    entry conversations (
+        label: Conversations
+        icon {
+            imageIconCssClasses: fa-table
+        }
+        layout {
+            sequence: 30
+        }
+        isCurrent {
+            type: pages
+            pages: 300
+        }
+        link {
+            target: {
+                page: 300
+            }
+        }
+    )
+
+    entry home (
+        label: Home
+        icon {
+            imageIconCssClasses: fa-home
+        }
+        layout {
+            sequence: 1
+        }
+        link {
+            target: {
+                page: 1
+            }
+        }
+    )
+
+    entry services (
+        label: Services
+        icon {
+            imageIconCssClasses: fa-accessor-more
+        }
+        layout {
+            sequence: 10
+        }
+        isCurrent {
+            type: pages
+            pages: 50
+        }
+        link {
+            target: {
+                page: 50
+            }
+        }
+    )
+
+    entry tools (
+        label: Tools
+        icon {
+            imageIconCssClasses: fa-gears
+        }
+        layout {
+            sequence: 20
+        }
+        isCurrent {
+            type: pages
+            pages: 200
+        }
+        link {
+            target: {
+                page: 200
+            }
+        }
+    )
+
+)
+

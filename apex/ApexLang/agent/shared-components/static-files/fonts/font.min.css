@@ -1,0 +1,5 @@
+@font-face {font-family: 'Poppins';font-style: normal;font-weight: 400;font-display: swap;src: local('Poppins Regular'), local('Poppins-Regular'),
+url('../fonts/Poppins-Regular.woff2') format('woff2'),
+url('../fonts/Poppins-Regular.woff') format('woff');}@font-face {font-family: 'Poppins';font-style: normal;font-weight: 700;font-display: swap;src: local('Poppins Bold'), local('Poppins-700'),
+url('../fonts/Poppins-700.woff2') format('woff2'),
+url('../fonts/Poppins-700.woff') format('woff');}

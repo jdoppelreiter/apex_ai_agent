@@ -1,0 +1,160 @@
+page 100 (
+    name: Agents
+    alias: AGENTS
+    title: Agents
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region agents (
+        name: Agents
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select aia.AI_AGENT_ID,
+                       aia.AI_SERVICE_ID,
+                       aia.NAME,
+                       aia.DESCRIPTION,
+                       case when length(aia.system_prompt)>100 then substr(aia.SYSTEM_PROMPT,1,100)||'...' else aia.system_prompt end as SYSTEM_PROMPT,
+                       aia.DEVELOPER_PROMPT,
+                       aia.EXAMPLES,
+                       aia.DEFAULT_HISTORY_MODE,
+                       ais.name as ai_service
+                  from AI_AGENTS aia
+                  join ai_services ais on aia.ai_service_id = ais.ai_service_id
+                ```
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
+                margin-top-lg
+            ]
+        }
+        card {
+            primaryKeyColumn1: AI_AGENT_ID
+        }
+        title {
+            column: NAME
+        }
+        body {
+            advancedFormatting: true
+            htmlExpression:
+                ```html
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                
+                  <div style="display: flex; gap: 0.5rem;">
+                    <div style="font-weight: bold; min-width: 120px;">Description:</div>
+                    <div style="flex: 1;">&DESCRIPTION!HTML.</div>
+                  </div>
+                
+                  <div style="display: flex; gap: 0.5rem;">
+                    <div style="font-weight: bold; min-width: 120px;">AI-Service:</div>
+                    <div style="flex: 1;">&AI_SERVICE!HTML.</div>
+                  </div>
+                
+                  <div style="display: flex; gap: 0.5rem;">
+                    <div style="font-weight: bold; min-width: 120px;">History-Mode:</div>
+                    <div style="flex: 1;">&DEFAULT_HISTORY_MODE!HTML.</div>
+                  </div>
+                
+                  <div style="display: flex; gap: 0.5rem;">
+                    <div style="font-weight: bold; min-width: 120px;">System-Prompt:</div>
+                    <div style="flex: 1;">&SYSTEM_PROMPT!HTML.</div>
+                  </div>
+                
+                </div>
+                
+                ```
+        }
+
+        action action (
+            label: Edit
+            layout {
+                sequence: 10
+            }
+            behavior {
+                target: {
+                    page: 110
+                    items: {
+                        P110_AI_AGENT_ID: &AI_AGENT_ID.
+                    }
+                    clearCache: 110
+                }
+            }
+            appearance {
+                displayType: textWithIcon
+                icon: fa-edit
+                hot: true
+            }
+        )
+
+    )
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    button create-agent (
+        buttonName: CREATE_AGENT
+        label: Create Agent
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+            ]
+            icon: fa-edit
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 110
+                clearCache: 110
+            }
+            warnOnUnsavedChanges: doNotCheck
+        }
+    )
+
+)
+

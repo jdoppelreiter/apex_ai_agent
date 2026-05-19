@@ -1,0 +1,289 @@
+/* ============================================================
+   Progress Tracker - Oracle APEX Template Component
+   ------------------------------------------------------------
+   Single stylesheet that covers BOTH render modes using native
+   CSS nesting:
+     - Standalone:  .progress-container is the root (fixed
+                    bottom-right floating button + menu).
+     - Bridged:     .fab-container.has-progress is the root
+                    (progress rows merged into the FAB menu).
+   The shared block at the top uses a comma-grouped root so &
+   expands to both selectors at once. Mode-specific blocks
+   below only apply where their root matches.
+   ============================================================ */
+
+
+/* ---------- shared: rules that apply in both modes ---------- */
+
+.t-Dialog .progress-container,
+.t-Drawer .progress-container {
+  display: none;
+}
+
+.a-TMV-noDataMsg {
+  display: none;
+}
+
+.progress-container,
+.fab-container.has-progress {
+
+   & template {
+      display: none !important;
+   }
+
+   & .progress-items {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 10px;
+   }
+
+   & .progress-item {
+      display: flex;
+      align-items: center;
+      width: 260px;
+      height: 54px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      background-color: #2b5fd9;
+      color: #fff;
+      overflow: hidden;
+
+      &[hidden] {
+         display: none !important;
+      }
+
+      /* Placeholder row used by APEX to keep the Template
+         Component report body rendered when the data source is
+         empty. The JS row-query helpers also filter on
+         :not([render="false"]) so these rows are invisible to
+         the badge count, layout, focus order, and findRow. */
+      &[render="false"] {
+         display: none !important;
+      }
+
+      &.state-running { background-color: var(--ut-palette-info-shade); }
+      &.state-success { background-color: var(--ut-palette-success-shade); }
+      &.state-error   { background-color: var(--ut-palette-error-shade); }
+   }
+
+   & .progress-item--show-all {
+      background-color: #4a4f58;
+   }
+
+   & .progress-item__body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      line-height: 1.2;
+      min-width: 0;
+      width: 100%;
+   }
+
+   & .progress-item__name {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+   }
+
+   & .progress-item__status {
+      font-size: 11px;
+      opacity: .85;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+   }
+
+   & .progress-item__link {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      color: inherit;
+      text-decoration: none;
+
+      &:focus-visible {
+         outline: 3px solid #ffffff;
+         outline-offset: 2px;
+         box-shadow: 0 0 0 5px var(--ut-palette-primary);
+      }
+   }
+
+   /* Badge: anchored to the offsetParent (.progress-container in
+      standalone, .fab button in bridged - both have position:
+      absolute, so top/right offsets work the same way). */
+   & .progress-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      border-radius: 11px;
+      background: #e8351d;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 22px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,.25);
+      transform: scale(0);
+      transition: transform .2s ease;
+      z-index: 3;
+      pointer-events: none;
+
+      &.is-visible {
+         transform: scale(1);
+      }
+   }
+}
+
+
+/* ---------- standalone-only: .progress-container ---------- */
+
+.progress-container {
+   user-select: none;
+   position: fixed;
+   bottom: 20px;
+   right: 30px;
+   width: 70px;
+   height: 70px;
+   z-index: 9998;
+
+   /* FOUC: hide until JS confirms standalone (.is-ready) or
+      merge (.is-merged). Without this the big button paints
+      for a frame before the bridge can run. */
+   &:not(.is-ready):not(.is-merged) {
+      visibility: hidden;
+   }
+
+   /* When merged into a FAB, the gutted standalone stays in
+      the DOM but never paints. */
+   &.is-merged {
+      display: none !important;
+   }
+
+   &.is-open {
+      width: 290px;
+      height: 420px;
+
+      & .progress-items {
+         opacity: 1;
+         pointer-events: auto;
+      }
+   }
+
+   & .progress-items {
+      position: absolute;
+      right: 10px;
+      bottom: 90px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+   }
+
+   & .progress-main {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      height: 70px;
+      width: 70px;
+      border-radius: 50%;
+      z-index: 2;
+      cursor: pointer;
+      background-color: var(--ut-palette-primary);
+      border: 0;
+      padding: 0;
+
+      &::before {
+         content: " ";
+         position: absolute;
+         bottom: 0;
+         right: 0;
+         height: 35px;
+         width: 35px;
+         background-color: inherit;
+         border-radius: 0 0 10px 0;
+         z-index: -1;
+      }
+
+      &:focus-visible {
+         outline: 3px solid #ffffff;
+         outline-offset: 2px;
+         box-shadow: 0 0 0 5px var(--ut-palette-primary);
+      }
+   }
+
+   & .progress-main__content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+      border-radius: 50%;
+
+      & .fa {
+         font-size: 36px;
+      }
+   }
+}
+
+
+/* ---------- bridged-only: .fab-container.has-progress ---------- */
+
+.fab-container.has-progress {
+
+   /* height: 100% (NOT auto) is intentional. .fab and
+      .sub-buttons are position: absolute, so they contribute
+      nothing to the parent's intrinsic height. With height:
+      auto the bounding box collapses to ~0px and the gap
+      between them sits OUTSIDE it, firing mouseleave when the
+      cursor traverses the gap. */
+   &.is-open {
+      width: 290px;
+      height: 100%;
+      max-height: 90vh;
+   }
+
+   /* Right-align so 260px progress rows sit flush right; the
+      50px round FAB icons stay fine right-aligned too. */
+   & .sub-buttons {
+      align-items: flex-end;
+   }
+
+   /* In bridged mode .progress-items is a flex child of
+      .sub-buttons. FAB.js drives visibility via [inert] on
+      .sub-buttons, so no fade transition is needed. */
+   & .progress-items {
+      align-self: flex-end;
+   }
+}
+
+
+/* ---------- global utility ---------- */
+
+/* sr-only also covers the count span the bridge moves into
+   the FAB main button - it keeps the .sr-only class. */
+.sr-only {
+   position: absolute !important;
+   width: 1px !important;
+   height: 1px !important;
+   padding: 0 !important;
+   margin: -1px !important;
+   overflow: hidden !important;
+   clip: rect(0, 0, 0, 0) !important;
+   white-space: nowrap !important;
+   border: 0 !important;
+}
+
+
+/* ---------- reduced motion (prefers-reduced-motion) ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+   .progress-container .progress-items,
+   .progress-container .progress-badge,
+   .fab-container.has-progress .progress-badge {
+      transition: none;
+   }
+}

@@ -1,0 +1,257 @@
+page 320 (
+    name: Conversation Details
+    alias: CONVERSATION-DETAILS
+    title: Conversation Details
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/drawer
+        templateOptions: [
+            #DEFAULT#
+            js-dialog-class-t-Drawer--pullOutEnd
+        ]
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    readOnly {
+        type: always
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region conversation-history (
+        name: Conversation History
+        type: form
+        source {
+            location: localDatabase
+            tableName: V_CONV_HISTORY
+        }
+        layout {
+            sequence: 10019
+            slot: contentBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--removeHeader js-removeLandmark
+                t-Region--noBorder
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    pageItem P320_AI_CONVERSATION_HISTORY_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @conversation-history
+            slot: regionBody
+        }
+        source {
+            formRegion: @conversation-history
+            column: AI_CONVERSATION_HISTORY_ID
+            dataType: number
+            queryOnly: true
+            primaryKey: true
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P320_AI_CONVERSATION_ID (
+        type: numberField
+        label {
+            label: Ai Conversation Id
+            alignment: left
+        }
+        layout {
+            sequence: 20
+            region: @conversation-history
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @conversation-history
+            column: AI_CONVERSATION_ID
+            dataType: number
+        }
+    )
+
+    pageItem P320_CONTENT (
+        type: richTextEditor
+        label {
+            label: Content
+            alignment: left
+        }
+        settings {
+            minHeight: 400
+        }
+        layout {
+            sequence: 80
+            region: @conversation-history
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        advanced {
+            initJavaScriptFunction:
+                ```javascript-browser
+                function(options){
+                    // disable the Autoformat feature
+                    options.editorOptions.removePlugins.push( "Autoformat" );
+                    // apply a custom toolbar
+                    options.editorOptions.toolbar = [ ];
+                    return options;
+                }
+                ```
+        }
+        source {
+            formRegion: @conversation-history
+            column: CONTENT
+            dataType: clob
+        }
+        sessionState {
+            dataType: clob
+        }
+    )
+
+    pageItem P320_CREATION_TS (
+        type: textField
+        label {
+            label: Creation Ts
+            alignment: left
+        }
+        layout {
+            sequence: 30
+            region: @conversation-history
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @conversation-history
+            column: CREATION_TS
+            dataType: timestampWithTimeZone
+        }
+    )
+
+    pageItem P320_MSG_DIRECTION (
+        type: textField
+        label {
+            label: Msg Direction
+            alignment: left
+        }
+        layout {
+            sequence: 50
+            region: @conversation-history
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+        }
+        validation {
+            valueRequired: true
+            maxLength: 5
+        }
+        source {
+            formRegion: @conversation-history
+            column: MSG_DIRECTION
+            dataType: varchar2
+        }
+    )
+
+    pageItem P320_MSG_ROLE (
+        type: textField
+        label {
+            label: Msg Role
+            alignment: left
+        }
+        layout {
+            sequence: 60
+            region: @conversation-history
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+        }
+        validation {
+            maxLength: 200
+        }
+        source {
+            formRegion: @conversation-history
+            column: MSG_ROLE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P320_TOOL_ID (
+        type: textField
+        label {
+            label: Tool Id
+            alignment: left
+        }
+        layout {
+            sequence: 70
+            region: @conversation-history
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+        }
+        validation {
+            maxLength: 4000
+        }
+        source {
+            formRegion: @conversation-history
+            column: TOOL_ID
+            dataType: varchar2
+        }
+    )
+
+    process initialize-form-conversation-details (
+        name: Initialize form Conversation Details
+        type: formInitialization
+        formRegion: @conversation-history
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 10472303116285713
+        }
+    )
+
+)
+

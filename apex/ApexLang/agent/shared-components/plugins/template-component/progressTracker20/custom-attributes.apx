@@ -1,0 +1,145 @@
+customAttribute APP_USER (
+    apexlangName: appUser
+    attribute: 15
+    name: App User
+    scope: report
+    validation {
+        required: true
+    }
+    appearance {
+        sequence: 150
+    }
+)
+
+customAttribute BG_COLOR (
+    apexlangName: bgColor
+    attribute: 4
+    name: Bg Color
+    scope: report
+    type: sessionStateValue
+    appearance {
+        sequence: 40
+    }
+)
+
+customAttribute BUTTON_ICON (
+    apexlangName: buttonIcon
+    attribute: 14
+    name: Button Icon
+    scope: report
+    type: icon
+    validation {
+        required: true
+    }
+    security {
+        escapeMode: htmlAttribute
+    }
+    appearance {
+        attributeGroup: @generalSettings
+        sequence: 140
+    }
+)
+
+customAttribute ICON_COLOR (
+    apexlangName: iconColor
+    attribute: 6
+    name: Icon Color
+    scope: report
+    type: sessionStateValue
+    appearance {
+        sequence: 60
+    }
+)
+
+customAttribute MAX_VISIBLE (
+    apexlangName: maxVisible
+    attribute: 17
+    name: Max Visible
+    scope: report
+    type: integer
+    appearance {
+        attributeGroup: @generalSettings
+        sequence: 170
+    }
+    default {
+        value: 3
+    }
+)
+
+customAttribute NAME (
+    apexlangName: name
+    attribute: 1
+    name: Name
+    type: sessionStateValue
+    appearance {
+        sequence: 10
+    }
+)
+
+customAttribute PROCESS_ID (
+    apexlangName: processId
+    attribute: 10
+    name: Process Id
+    scope: report
+    type: sessionStateValue
+    appearance {
+        sequence: 100
+    }
+)
+
+customAttribute RENDER (
+    apexlangName: render
+    attribute: 18
+    name: Render
+    scope: report
+    appearance {
+        sequence: 180
+    }
+)
+
+customAttribute SHOW_ALL_URL (
+    apexlangName: showAllUrl
+    attribute: 8
+    name: Show All Url
+    scope: report
+    type: sessionStateValue
+    appearance {
+        sequence: 80
+    }
+)
+
+customAttribute STATE (
+    apexlangName: state
+    attribute: 11
+    name: State
+    scope: report
+    type: sessionStateValue
+    appearance {
+        sequence: 110
+    }
+)
+
+customAttribute STATUS_MESSAGE (
+    apexlangName: statusMessage
+    attribute: 2
+    name: Status Message
+    type: sessionStateValue
+    appearance {
+        sequence: 20
+    }
+)
+
+customAttribute WS_URL (
+    apexlangName: wsUrl
+    attribute: 16
+    name: WS Url
+    scope: report
+    validation {
+        required: true
+    }
+    appearance {
+        attributeGroup: @generalSettings
+        sequence: 160
+    }
+)
+

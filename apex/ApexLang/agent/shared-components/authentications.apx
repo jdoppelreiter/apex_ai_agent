@@ -1,0 +1,10 @@
+authentication builder (
+    name: Builder
+    type: internalAppExtension
+)
+
+authentication oracle-apex-accounts (
+    name: Oracle APEX Accounts
+    type: oracleApexAccounts
+)
+

@@ -1,0 +1,371 @@
+page 300 (
+    name: Conversations
+    alias: CONVERSATIONS
+    title: Conversations
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    css {
+        inline:
+            ```css
+            /* ── Desktop: hide inline label spans ── */
+            .t-Report-cell span.c-header {
+              display: none;
+            }
+            
+            /* ── Mobile: < 768px ── */
+            @media (max-width: 767px) {
+            
+              .t-Report-report thead {
+                display: none;
+              }
+            
+              .t-Report-report tbody {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+              }
+            
+              .t-Report-report tbody tr {
+                display: flex;
+                flex-direction: column;
+                border-bottom: 1px solid rgba(0,0,0,0.1);
+                padding: 0.5rem 0;
+              }
+            
+              .t-Report-report tbody td {
+                display: flex;
+                flex-direction: row;
+                align-items: baseline;
+                padding: 0.2rem 0;
+                /* Remove any alignment overrides from inline align attribute */
+                text-align: left !important;
+              }
+            
+              /* Label span: fixed width, bold, inherit color */
+              .t-Report-report tbody td span.c-header {
+                display: inline;
+                font-weight: 700;
+                flex: 0 0 9rem;
+                min-width: 9rem;
+              }
+            }
+            
+            ```
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region history (
+        name: History
+        type: classicReport
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select null as action, 
+                       ai.ai_conversation_id,
+                       ai.ai_agent_id,
+                       ai.ai_service_id,
+                       ai.creation_ts,
+                       ai.model,
+                       ai.tools,
+                       ai.execution_type,
+                       ai.history_mode,
+                       ai.status,
+                       ais.name as ai_service_name
+                  from ai_conversations ai 
+                  left join ai_services ais on ai.ai_service_id = ais.ai_service_id  
+                ```
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--scrollBody
+                margin-top-lg
+            ]
+        }
+        componentAppearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--stretch
+                t-Report--staticRowColors
+                t-Report--rowHighlight
+            ]
+        }
+        pagination {
+            type: nextAndPreviousLinks
+        }
+
+        column ACTION (
+            reportColumnQueryId: 1
+            derivedColumn: N
+            type: link
+            heading {
+                heading: Action
+            }
+            layout {
+                sequence: 10
+            }
+            link {
+                target: {
+                    page: 310
+                    items: {
+                        P310_AI_CONVERSATION_ID: #AI_CONVERSATION_ID#
+                    }
+                    clearCache: 310
+                }
+                linkText: <span role="img" aria-label="Edit" class="fa fa-edit" title="Edit"></span> Open Conversation
+            }
+        )
+
+        column AI_AGENT_ID (
+            reportColumnQueryId: 3
+            derivedColumn: N
+            heading {
+                heading: Ai Agent Id
+                alignment: end
+            }
+            layout {
+                sequence: 40
+                columnAlignment: end
+            }
+            config {
+                buildOption: @commented-out
+            }
+        )
+
+        column AI_CONVERSATION_ID (
+            reportColumnQueryId: 2
+            derivedColumn: N
+            heading {
+                heading: Ai Conversation Id
+                alignment: end
+            }
+            layout {
+                sequence: 20
+                columnAlignment: end
+            }
+            columnFormatting {
+                htmlExpression: <span class="c-header">AI Conversation ID</span>#AI_CONVERSATION_ID#
+                cssClasses: test
+            }
+        )
+
+        column AI_SERVICE_ID (
+            reportColumnQueryId: 4
+            derivedColumn: N
+            heading {
+                heading: Ai Service Id
+                alignment: end
+            }
+            layout {
+                sequence: 50
+                columnAlignment: end
+            }
+            config {
+                buildOption: @commented-out
+            }
+        )
+
+        column AI_SERVICE_NAME (
+            reportColumnQueryId: 11
+            derivedColumn: N
+            heading {
+                heading: Ai Service Name
+            }
+            layout {
+                sequence: 30
+            }
+            columnFormatting {
+                htmlExpression: <span class="c-header">AI Service</span>#AI_SERVICE_NAME#
+            }
+        )
+
+        column CREATION_TS (
+            reportColumnQueryId: 5
+            derivedColumn: N
+            heading {
+                heading: Creation Ts
+            }
+            layout {
+                sequence: 60
+            }
+            appearance {
+                formatMask: DD.MM.YYYY HH24:MI:SS
+            }
+            columnFormatting {
+                htmlExpression: <span class="c-header">Creation at</span>#CREATION_TS#
+            }
+        )
+
+        column EXECUTION_TYPE (
+            reportColumnQueryId: 8
+            derivedColumn: N
+            heading {
+                heading: Execution Type
+            }
+            layout {
+                sequence: 90
+            }
+            config {
+                buildOption: @commented-out
+            }
+        )
+
+        column HISTORY_MODE (
+            reportColumnQueryId: 9
+            derivedColumn: N
+            heading {
+                heading: History Mode
+            }
+            layout {
+                sequence: 100
+            }
+            config {
+                buildOption: @commented-out
+            }
+        )
+
+        column MODEL (
+            reportColumnQueryId: 6
+            derivedColumn: N
+            heading {
+                heading: Model
+            }
+            layout {
+                sequence: 70
+            }
+            columnFormatting {
+                htmlExpression: <span class="c-header">Model</span>#MODEL#
+            }
+        )
+
+        column STATUS (
+            reportColumnQueryId: 10
+            derivedColumn: N
+            heading {
+                heading: Status
+            }
+            layout {
+                sequence: 110
+            }
+            columnFormatting {
+                htmlExpression: <span class="c-header">Status</span>#STATUS#
+            }
+        )
+
+        column TOOLS (
+            reportColumnQueryId: 7
+            derivedColumn: N
+            heading {
+                heading: Tools
+            }
+            layout {
+                sequence: 80
+            }
+            config {
+                buildOption: @commented-out
+            }
+        )
+
+    )
+
+    region new (
+        name: New
+        type: smartFilters
+        source {
+            filteredRegion: @history
+        }
+        layout {
+            sequence: 10
+            parentRegion: @history
+            slot: regionBody
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+        settings {
+            compactNosThreshold: 10000
+        }
+
+        filter P300_SEARCH (
+            type: search
+            label {
+                label: Search
+            }
+            layout {
+                sequence: 10
+            }
+        )
+
+    )
+
+    button start (
+        buttonName: START
+        label: Start new conversation
+        layout {
+            sequence: 10
+            region: @history
+            slot: edit
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+            ]
+            cssClasses: fab-add-to-actions
+            icon: fa-ai-generative
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 305
+                clearCache: 305
+            }
+            warnOnUnsavedChanges: doNotCheck
+        }
+    )
+
+)
+

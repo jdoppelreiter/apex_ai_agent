@@ -1,0 +1,99 @@
+customAttribute CONTENT (
+    apexlangName: content
+    attribute: 3
+    name: Content
+    type: sessionStateValue
+    appearance {
+        sequence: 30
+    }
+    supports {
+        dataTypes: [
+            varchar2
+            clob
+        ]
+    }
+)
+
+customAttribute DATETIME (
+    apexlangName: datetime
+    attribute: 4
+    name: Datetime
+    type: sessionStateValue
+    appearance {
+        sequence: 40
+    }
+    supports {
+        dataTypes: date
+    }
+)
+
+customAttribute DATETIME_ISO (
+    apexlangName: datetimeIso
+    attribute: 5
+    name: Datetime Iso
+    type: sessionStateValue
+    appearance {
+        sequence: 50
+    }
+)
+
+customAttribute DIRECTION (
+    apexlangName: direction
+    attribute: 6
+    name: Direction
+    type: sessionStateValue
+    appearance {
+        sequence: 60
+    }
+)
+
+customAttribute ID (
+    apexlangName: id
+    attribute: 7
+    name: Id
+    type: sessionStateValue
+    appearance {
+        sequence: 70
+    }
+)
+
+customAttribute ROLE (
+    apexlangName: role
+    attribute: 8
+    name: Role
+    type: sessionStateValue
+    appearance {
+        sequence: 80
+    }
+)
+
+customAttribute TOOL_ID (
+    apexlangName: toolId
+    attribute: 9
+    name: Tool Id
+    type: sessionStateValue
+    appearance {
+        sequence: 90
+    }
+)
+
+customAttribute TOOL_ID_BADGE_CLASS (
+    apexlangName: toolIdBadgeClass
+    attribute: 10
+    name: Tool Id Badge Class
+    type: sessionStateValue
+    appearance {
+        sequence: 100
+    }
+)
+
+customAttribute TYPE (
+    apexlangName: type
+    attribute: 11
+    name: Type
+    type: sessionStateValue
+    appearance {
+        sequence: 110
+    }
+)
+

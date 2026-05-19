@@ -1,0 +1,173 @@
+page 200 (
+    name: Tools
+    alias: TOOLS
+    title: Tools
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region tools (
+        name: Tools
+        type: cards
+        source {
+            location: localDatabase
+            tableName: AI_TOOLS
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
+                margin-top-lg
+            ]
+        }
+        accessibility {
+            landmarkType: region
+        }
+        card {
+            primaryKeyColumn1: AI_TOOL_ID
+        }
+        title {
+            column: NAME
+        }
+        subtitle {
+            column: IDENTIFIER
+        }
+        body {
+            advancedFormatting: true
+            htmlExpression:
+                ```html
+                &DESCRIPTION!HTML.<br/>
+                <br/>
+                <b>Function:</b> &FUNCTION_NAME.<br>
+                <b>Parameters required:</b> &PARAMETERS_REQUIRED.
+                ```
+        }
+
+        action action (
+            label: Edit Tool
+            layout {
+                sequence: 10
+            }
+            behavior {
+                target: {
+                    page: 250
+                    items: {
+                        P250_AI_TOOL_ID: &AI_TOOL_ID.
+                    }
+                    clearCache: 250
+                }
+            }
+            appearance {
+                displayType: textWithIcon
+                icon: fa-edit
+                hot: true
+            }
+        )
+
+        action action-2 (
+            type: fullCard
+            layout {
+                sequence: 20
+            }
+            behavior {
+                target: {
+                    page: 250
+                    items: {
+                        P250_AI_TOOL_ID: &AI_TOOL_ID.
+                    }
+                    clearCache: 250
+                }
+            }
+        )
+
+    )
+
+    button create-tool (
+        buttonName: CREATE_TOOL
+        label: Create Tool
+        layout {
+            sequence: 20
+            slot: body
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+            ]
+            icon: fa-plus-circle
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 250
+                clearCache: 250
+            }
+            warnOnUnsavedChanges: doNotCheck
+        }
+    )
+
+    dynamicAction edit-tool-dialog-closed (
+        name: Edit Tool Dialog Closed
+        execution {
+            sequence: 10
+        }
+        when {
+            event: apexafterclosedialog
+            selectionType: jsExpression
+            javaScriptExpression: document
+        }
+
+        action native-refresh (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @tools
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+    )
+
+)
+

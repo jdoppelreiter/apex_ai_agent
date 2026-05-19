@@ -1,0 +1,193 @@
+page 3000 (
+    name: TickerExamples
+    alias: TICKEREXAMPLES
+    title: TickerExamples
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region report (
+        name: Report
+        type: classicReport
+        source {
+            location: localDatabase
+            tableName: AI_CONVERSATIONS
+            whereClause: status='RUNNING' and rownum <= 2
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/interactive-report
+            templateOptions: [
+                #DEFAULT#
+                t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+            ]
+        }
+        componentAppearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--stretch
+                t-Report--altRowsDefault
+                t-Report--rowHighlight
+            ]
+        }
+        pagination {
+            type: nextAndPreviousLinks
+        }
+
+        column AI_AGENT_ID (
+            reportColumnQueryId: 2
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 20
+            }
+        )
+
+        column AI_CONVERSATION_ID (
+            reportColumnQueryId: 1
+            derivedColumn: N
+            heading {
+                heading: Ai Conversation Id
+                alignment: end
+            }
+            layout {
+                sequence: 10
+                columnAlignment: end
+            }
+        )
+
+        column AI_SERVICE_ID (
+            reportColumnQueryId: 3
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 30
+            }
+        )
+
+        column CREATION_TS (
+            reportColumnQueryId: 4
+            derivedColumn: N
+            heading {
+                heading: Creation Ts
+            }
+            layout {
+                sequence: 40
+            }
+        )
+
+        column DERIVED$01 (
+            reportColumnQueryId: 10
+            derivedColumn: Y
+            heading {
+                heading: &nbsp;
+            }
+            layout {
+                sequence: 100
+            }
+            columnFormatting {
+                htmlExpression:
+                    ```html
+                    <c-ticker id="info-status-ticker-#AI_CONVERSATION_ID#" 
+                              interval="3000" 
+                              status="enabled" 
+                              event="checkLastMessage" 
+                              convID="#AI_CONVERSATION_ID#">
+                    </c-ticker>
+                    
+                    
+                    ```
+            }
+            sorting {
+                sortable: false
+            }
+        )
+
+        column EXECUTION_TYPE (
+            reportColumnQueryId: 7
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 70
+            }
+        )
+
+        column HISTORY_MODE (
+            reportColumnQueryId: 8
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 80
+            }
+        )
+
+        column MODEL (
+            reportColumnQueryId: 5
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 50
+            }
+        )
+
+        column STATUS (
+            reportColumnQueryId: 9
+            derivedColumn: N
+            heading {
+                heading: Status
+            }
+            layout {
+                sequence: 90
+            }
+        )
+
+        column TOOLS (
+            reportColumnQueryId: 6
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 60
+            }
+        )
+
+    )
+
+    dynamicAction write-id-to-console (
+        name: write ID to console
+        execution {
+            sequence: 20
+        }
+        when {
+            event: custom
+            customEvent: checkLastMessage
+            selectionType: jsExpression
+            javaScriptExpression: document
+        }
+
+        action native-javascript-code (
+            action: executeJsCode
+            settings {
+                jsCode: console.log('ID:', this.data.convid);
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+    )
+
+)
+

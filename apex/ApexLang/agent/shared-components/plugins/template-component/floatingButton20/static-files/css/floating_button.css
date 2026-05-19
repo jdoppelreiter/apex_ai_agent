@@ -1,0 +1,137 @@
+.fab-container-row {
+   position: sticky;
+   bottom: 0px;
+}
+
+.t-Dialog .fab-container,
+.t-Drawer .fab-container {
+  display: none !important;
+}
+
+.fab-container {
+   height: 4.375rem; /* collapsed size */
+   user-select: none;
+   position: fixed;
+   bottom: 20px;
+   right: 4rem;
+   width: 4.375rem;
+}
+
+/* The JS is the single source of truth for "menu open" - it toggles
+   .is-open in response to mouseenter, focusin, and arrow keys, and
+   removes it on mouseleave (without focus inside), focusout, Escape,
+   and outside-click. We do NOT use :hover or :focus-within here for
+   two reasons:
+   1. :focus-within would re-open the menu when Escape returns focus
+      to the trigger button, fighting the close.
+   2. :hover would show the menu visually while the JS still has
+      [inert] set on it, leaving the menu unclickable. */
+.fab-container.is-open {
+   height: 100%;
+}
+
+/* ---------- main button ---------- */
+.fab-container .fab {
+   position: absolute;
+   right: 0;
+   bottom: 0;
+   height: 3.785rem;
+   width: 3.785rem;
+   border-radius: 50%;
+   z-index: 2;
+   background-color: var(--ut-palette-primary);
+   border: 0;
+   padding: 0;
+   cursor: pointer;
+}
+.fab-container .fab::before {
+   content: " ";
+   position: absolute;
+   bottom: 0;
+   right: 0;
+   height: 35px;
+   width: 35px;
+   background-color: inherit;
+   border-radius: 0 0 10px 0;
+   z-index: -1;
+}
+.fab-container .fab .fab-content {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   height: 100%;
+   width: 100%;
+   border-radius: 50%;
+}
+.fab-container .fab .fab-content .fa {
+   color: var(--ut-palette-primary-contrast);
+   font-size: 2rem;
+}
+
+/* ---------- visible focus indicators (WCAG 2.4.7) ---------- */
+.fab-container .fab:focus-visible,
+.fab-container .sub-button a:focus-visible {
+   outline: 3px solid #ffffff;
+   outline-offset: 2px;
+   box-shadow: 0 0 0 5px var(--ut-palette-primary);
+}
+
+/* ---------- sub-buttons wrapper (flex column, newest nearest the FAB) ---------- */
+.fab-container .sub-buttons {
+   position: absolute;
+   right: 10px;
+   bottom: 75px;
+   display: flex;
+   flex-direction: column-reverse;
+   align-items: center;
+   gap: 10px;
+   opacity: 0;
+   pointer-events: none;
+   transition: opacity 0.3s ease;
+}
+.fab-container.is-open .sub-buttons {
+   opacity: 1;
+   pointer-events: auto;
+}
+
+/* ---------- individual sub-button ---------- */
+.fab-container .sub-button {
+   background-color: var(--ut-palette-primary);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   height: 3rem;
+   width: 3rem;
+   border-radius: 50%;
+}
+.fab-container .sub-button:hover {
+   cursor: pointer;
+}
+.fab-container .sub-button .fa {
+   color: white;
+   padding-top: 1px;
+   font-size: 1.275rem;
+   font-weight: 600;
+}
+.fab-container .sub-button a {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 100%;
+   height: 100%;
+   border-radius: 50%;
+   color: inherit;
+}
+
+/* ---------- reduced motion (prefers-reduced-motion) ---------- */
+@media (prefers-reduced-motion: reduce) {
+   .fab-container .sub-buttons {
+      transition: none;
+   }
+}
+
+@media (max-width: 639px) {
+   .fab-container {
+      right: 0.5rem;
+   }
+}

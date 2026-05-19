@@ -1,0 +1,115 @@
+file "css/dark/custom_styles.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "css/dark/custom_styles.min.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "fonts/Poppins-700.eot" (
+    mimeType: application/vnd.ms-fontobject
+    charSet: utf-8
+)
+
+file "fonts/Poppins-700.svg" (
+    mimeType: image/svg+xml
+    charSet: utf-8
+)
+
+file "fonts/Poppins-700.ttf" (
+    mimeType: font/ttf
+    charSet: utf-8
+)
+
+file "fonts/Poppins-700.woff" (
+    mimeType: font/woff
+    charSet: utf-8
+)
+
+file "fonts/Poppins-700.woff2" (
+    mimeType: font/woff2
+    charSet: utf-8
+)
+
+file "fonts/Poppins-Regular.eot" (
+    mimeType: application/vnd.ms-fontobject
+    charSet: utf-8
+)
+
+file "fonts/Poppins-Regular.svg" (
+    mimeType: image/svg+xml
+    charSet: utf-8
+)
+
+file "fonts/Poppins-Regular.ttf" (
+    mimeType: font/ttf
+    charSet: utf-8
+)
+
+file "fonts/Poppins-Regular.woff" (
+    mimeType: font/woff
+    charSet: utf-8
+)
+
+file "fonts/Poppins-Regular.woff2" (
+    mimeType: font/woff2
+    charSet: utf-8
+)
+
+file "fonts/font.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "fonts/font.min.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "icons/app-icon-144-rounded.png" (
+    mimeType: image/png
+    charSet: utf-8
+)
+
+file "icons/app-icon-192.png" (
+    mimeType: image/png
+    charSet: utf-8
+)
+
+file "icons/app-icon-256-rounded.png" (
+    mimeType: image/png
+    charSet: utf-8
+)
+
+file "icons/app-icon-32.png" (
+    mimeType: image/png
+    charSet: utf-8
+)
+
+file "icons/app-icon-512.png" (
+    mimeType: image/png
+    charSet: utf-8
+)
+
+file "js/helper.js" (
+    mimeType: text/javascript
+    charSet: utf-8
+)
+
+file "js/helper.min.js" (
+    mimeType: text/javascript
+    charSet: utf-8
+)
+
+file "js/webComponents/c-ticker.js" (
+    mimeType: text/javascript
+    charSet: utf-8
+)
+
+file "js/webComponents/c-ticker.min.js" (
+    mimeType: text/javascript
+    charSet: utf-8
+)
+

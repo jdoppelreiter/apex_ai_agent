@@ -1,0 +1,70 @@
+plugin floatingButton20 (
+    name: Floating Button 2.0
+    staticId: DEV.JNMR.FLOATING_BUTTON
+    templateComponent {
+        availableAs: report
+        partial:
+            ```html
+            <a href="#URL#"
+               target="#TARGET#"
+               role="menuitem"
+               aria-label="#LABEL!HTML#">
+               <span class="fa #ICON#" style="{if SUB_ICON_COLOR/}color: #SUB_ICON_COLOR#;{endif/}" aria-hidden="true"></span>
+            </a>
+            ```
+        reportBody:
+            ```html
+            <div class="fab-container">
+               <button type="button"
+                       class="fab shadow"
+                       style="{if BG_COLOR/}background-color: #BG_COLOR#;{endif/}"
+                       aria-haspopup="true"
+                       aria-expanded="false"
+                       aria-controls="fab-menu-#REGION_STATIC_ID#"
+                       aria-label="#FAB_LABEL!ATTR#"
+                       {if ADD_TO_ACTIONS/}add-to-actions-class="#ADD_TO_ACTIONS!HTML#"{endif/}
+                       >
+                  <span class="fab-content">
+                     <span class="fa #BUTTON_ICON#" style="{if ICON_COLOR/}color: #ICON_COLOR#;{endif/}" aria-hidden="true"></span>
+                  </span>
+               </button>
+               <div class="sub-buttons"
+                    id="fab-menu-#REGION_STATIC_ID#"
+                    role="menu"
+                    aria-label="Quick Actions">
+                  #APEX$ROWS#
+               </div>
+               <div class="sr-only" aria-live="polite" aria-atomic="false" data-fab-live></div>
+            </div>
+            ```
+        reportRow:
+            ```html
+            <div class="sub-button shadow"
+                 role="none"
+                 style="{if BG_COLOR/}background-color: #BG_COLOR#;{endif/}"
+                 #APEX$ROW_IDENTIFICATION#>
+               #APEX$PARTIAL#
+            </div>
+            ```
+        numberOfLazyLoadingSkeletons: 3
+    }
+    component {
+        standardAttributes: regionTemplateAttr
+    }
+    css {
+        fileUrls: [
+            #PLUGIN_FILES#css/floating_button#MIN#.css
+            #PLUGIN_FILES#css/floating_button_actions#MIN#.css
+        ]
+    }
+    javaScript {
+        fileUrls: [
+            #PLUGIN_FILES#js/floating_button#MIN#.js
+            #PLUGIN_FILES#js/floating_button_actions#MIN#.js
+        ]
+    }
+    information {
+        version: 2.0
+    }
+)
+

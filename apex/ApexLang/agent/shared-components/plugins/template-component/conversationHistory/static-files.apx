@@ -1,0 +1,10 @@
+file "css/tc-yaaa-conv-card.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "css/tc-yaaa-conv-card.min.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+

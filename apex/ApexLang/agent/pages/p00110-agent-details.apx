@@ -1,0 +1,381 @@
+page 110 (
+    name: Agent Details
+    alias: AGENT-DETAILS
+    title: Agent Details
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/drawer
+        templateOptions: [
+            #DEFAULT#
+            js-dialog-class-t-Drawer--pullOutEnd
+        ]
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region agent-details (
+        name: Agent Details
+        type: form
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select aia.AI_AGENT_ID,
+                       aia.AI_SERVICE_ID,
+                       aia.NAME,
+                       aia.DESCRIPTION,
+                       aia.SYSTEM_PROMPT,
+                       aia.DEVELOPER_PROMPT,
+                       aia.EXAMPLES,
+                       aia.DEFAULT_HISTORY_MODE,
+                       ais.name as ai_service
+                  from AI_AGENTS aia
+                  join ai_services ais on aia.ai_service_id = ais.ai_service_id
+                ```
+        }
+        layout {
+            sequence: 10
+            slot: contentBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    region assigned-tools (
+        name: Assigned Tools
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select ait.ai_tool_id
+                      ,ait.name
+                      ,ait.description
+                      ,ait.function_name
+                      ,ait.parameters
+                      ,ait.parameters_required
+                  from ai_tools ait 
+                  join ai_agent_tools aiat on ait.ai_tool_id = aiat.ai_tool_id
+                  where aiat.ai_agent_id = :P110_AI_AGENT_ID
+                ```
+            pageItemsToSubmit: P110_AI_AGENT_ID
+        }
+        layout {
+            sequence: 20
+            slot: contentBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--noBorder
+                t-Region--scrollBody
+            ]
+        }
+        title {
+            column: NAME
+        }
+        subtitle {
+            column: DESCRIPTION
+        }
+        body {
+            advancedFormatting: true
+            htmlExpression:
+                ```html
+                Function: &FUNCTION_NAME.<br/>
+                Parameters required: &PARAMETERS_REQUIRED.
+                ```
+        }
+    )
+
+    pageItem P110_AI_AGENT_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @agent-details
+            slot: regionBody
+        }
+        source {
+            formRegion: @agent-details
+            column: AI_AGENT_ID
+            dataType: number
+            queryOnly: true
+            primaryKey: true
+        }
+        sessionState {
+            storage: session
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P110_AI_SERVICE (
+        type: textField
+        label {
+            label: Ai Service
+            alignment: left
+        }
+        layout {
+            sequence: 30
+            region: @agent-details
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+        }
+        validation {
+            valueRequired: true
+            maxLength: 1020
+        }
+        source {
+            formRegion: @agent-details
+            column: AI_SERVICE
+            dataType: varchar2
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P110_AI_SERVICE_ID (
+        type: hidden
+        layout {
+            sequence: 20
+            region: @agent-details
+            slot: regionBody
+        }
+        source {
+            formRegion: @agent-details
+            column: AI_SERVICE_ID
+            dataType: number
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P110_DEFAULT_HISTORY_MODE (
+        type: radioGroup
+        label {
+            label: Default History Mode
+            alignment: left
+        }
+        settings {
+            noOfCols: 2
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:TABLE;TABLE,COLLECTION;COLLECTION
+            displayExtraValues: false
+            displayNullValue: false
+        }
+        layout {
+            sequence: 90
+            region: @agent-details
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--radioButtonGroup
+            ]
+        }
+        source {
+            formRegion: @agent-details
+            column: DEFAULT_HISTORY_MODE
+            dataType: varchar2
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P110_DESCRIPTION (
+        type: textarea
+        label {
+            label: Description
+            alignment: left
+        }
+        layout {
+            sequence: 50
+            region: @agent-details
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+            height: 5
+        }
+        validation {
+            maxLength: 4000
+        }
+        source {
+            formRegion: @agent-details
+            column: DESCRIPTION
+            dataType: varchar2
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P110_DEVELOPER_PROMPT (
+        type: textarea
+        label {
+            label: Developer Prompt
+            alignment: left
+        }
+        layout {
+            sequence: 70
+            region: @agent-details
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+            height: 5
+        }
+        source {
+            formRegion: @agent-details
+            column: DEVELOPER_PROMPT
+            dataType: clob
+        }
+        sessionState {
+            dataType: clob
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P110_EXAMPLES (
+        type: textarea
+        label {
+            label: Examples
+            alignment: left
+        }
+        layout {
+            sequence: 80
+            region: @agent-details
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+            height: 5
+        }
+        source {
+            formRegion: @agent-details
+            column: EXAMPLES
+            dataType: clob
+        }
+        sessionState {
+            dataType: clob
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P110_NAME (
+        type: textField
+        label {
+            label: Name
+            alignment: left
+        }
+        layout {
+            sequence: 40
+            region: @agent-details
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+        }
+        validation {
+            valueRequired: true
+            maxLength: 255
+        }
+        source {
+            formRegion: @agent-details
+            column: NAME
+            dataType: varchar2
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P110_SYSTEM_PROMPT (
+        type: textarea
+        label {
+            label: System Prompt
+            alignment: left
+        }
+        layout {
+            sequence: 60
+            region: @agent-details
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+            height: 5
+        }
+        source {
+            formRegion: @agent-details
+            column: SYSTEM_PROMPT
+            dataType: clob
+        }
+        sessionState {
+            dataType: clob
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    process initialize-form-agent-details (
+        name: Initialize form Agent Details
+        type: formInitialization
+        formRegion: @agent-details
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 1498187704984012
+        }
+    )
+
+)
+

@@ -1,0 +1,246 @@
+page 0 (
+    name: Global Page
+
+    region fab (
+        name: FAB
+        type: appTemplateComponent/floatingButton20
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select 'https://www.solicon-it.com' as url
+                     , '_blank' as target
+                     , 'fa-globe' as icon
+                     , 'Homepage' as label
+                     , 10 as seq
+                  from dual
+                 union all
+                select 'mailto:joerg.doppelreiter@solicon-it.com'
+                     , 'self'
+                     , 'fa-envelope-o'
+                     , 'Send E-Mail'
+                     , 20
+                  from dual
+                 union all
+                select 'https://www.solicon-it.com'
+                     , '_blank'
+                     , 'fa-question-circle-o'
+                     , 'Get Support'
+                     , 40
+                  from dual
+                ```
+        }
+        layout {
+            sequence: 10
+            slot: footer
+            rowCssClasses: fab-container-row
+        }
+        appearance {
+            template: @/blank-with-attributes-no-grid
+            templateOptions: #DEFAULT#
+        }
+        accessibility {
+            landmarkType: region
+        }
+        advanced {
+            htmlDomId: ACTIONS_MENU
+        }
+        componentAppearance {
+            display: report
+        }
+        settings {
+            icon: ICON
+            target: TARGET
+            url: URL
+            subIconColor: #f7f7f7
+            label: LABEL
+        }
+        plugin-generalSettings {
+            buttonIcon: fa-gear
+            regionStaticId: ACTIONS_MENU
+            addToActionsClassname: fab-add-to-actions
+        }
+
+        column ICON (
+            layout {
+                sequence: 30
+            }
+            source {
+                databaseColumn: ICON
+                dataType: varchar2
+            }
+        )
+
+        column LABEL (
+            layout {
+                sequence: 50
+            }
+            source {
+                databaseColumn: LABEL
+                dataType: varchar2
+            }
+        )
+
+        column SEQ (
+            layout {
+                sequence: 40
+            }
+            source {
+                databaseColumn: SEQ
+                dataType: number
+            }
+        )
+
+        column TARGET (
+            layout {
+                sequence: 20
+            }
+            source {
+                databaseColumn: TARGET
+                dataType: varchar2
+            }
+        )
+
+        column URL (
+            layout {
+                sequence: 10
+            }
+            source {
+                databaseColumn: URL
+                dataType: varchar2
+            }
+        )
+
+    )
+
+    region progress-tracker (
+        name: Progress Tracker
+        type: appTemplateComponent/progressTracker20
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select  null as process_id
+                      , null as process_name
+                      , null as status_message
+                      , null as state
+                      , null as last_updated_on
+                      , 'false' as render
+                  from dual
+                union all
+                select process_id
+                     , process_name
+                     , case when status_code = 'SUCCESS' then 'Task finished' else status_message end as status_message
+                     , decode(status_code, 'EXECUTING', 'running'
+                                         , 'SUCCESS', 'success'
+                                         , status_code
+                             ) as state
+                     , last_updated_on
+                     , 'true' as render
+                from apex_appl_page_bg_proc_status b
+                where status_code in ('EXECUTING','SUCCESS')
+                  and last_updated_on > sysdate - 10/3600
+                
+                ```
+        }
+        orderBy {
+            type: staticValue
+            orderByClause: last_updated_on desc  fetch first 3 rows only
+        }
+        layout {
+            sequence: 20
+            slot: footer
+        }
+        appearance {
+            template: @/blank-with-attributes-no-grid
+            templateOptions: #DEFAULT#
+        }
+        accessibility {
+            landmarkType: region
+        }
+        componentAppearance {
+            display: report
+        }
+        settings {
+            name: PROCESS_NAME
+            statusMessage: STATUS_MESSAGE
+            processId: PROCESS_ID
+            state: STATE
+            appUser: &APP_USER.
+            render: &RENDER.
+        }
+        plugin-generalSettings {
+            buttonIcon: fa-person-running-fast
+            wsUrl: ws://localhost:8090/ws
+            maxVisible: 5
+        }
+        messages {
+            whenNoDataFound: <div class="hide-no-data-found"></div>
+        }
+
+        column LAST_UPDATED_ON (
+            layout {
+                sequence: 50
+            }
+            source {
+                databaseColumn: LAST_UPDATED_ON
+                dataType: timestampWithTimeZone
+            }
+        )
+
+        column PROCESS_ID (
+            layout {
+                sequence: 10
+            }
+            source {
+                databaseColumn: PROCESS_ID
+                dataType: number
+            }
+        )
+
+        column PROCESS_NAME (
+            layout {
+                sequence: 60
+            }
+            source {
+                databaseColumn: PROCESS_NAME
+                dataType: varchar2
+            }
+        )
+
+        column RENDER (
+            layout {
+                sequence: 70
+            }
+            source {
+                databaseColumn: RENDER
+                dataType: varchar2
+            }
+        )
+
+        column STATE (
+            layout {
+                sequence: 40
+            }
+            source {
+                databaseColumn: STATE
+                dataType: varchar2
+            }
+        )
+
+        column STATUS_MESSAGE (
+            layout {
+                sequence: 30
+            }
+            source {
+                databaseColumn: STATUS_MESSAGE
+                dataType: varchar2
+            }
+        )
+
+    )
+
+)
+

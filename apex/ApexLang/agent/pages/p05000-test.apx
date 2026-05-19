@@ -1,0 +1,126 @@
+page 5000 (
+    name: test
+    alias: TEST
+    title: test
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region new (
+        name: New
+        type: appTemplateComponent/progressTracker20
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT 'EXPORT_001' AS process_id,
+                       'Nightly customer export'     AS name,
+                       'Processing batch 12 of 50'   AS status_message,
+                       'running'                     AS state
+                  FROM dual
+                UNION ALL
+                SELECT 'BACKUP_DB',  'Database backup',
+                       'Completed in 00:04:12',              'success' FROM dual
+                UNION ALL
+                SELECT 'ARCHIVE_07', 'Archive run #7',
+                       'ORA-20010: source table locked',     'error'   FROM dual
+                ```
+        }
+        layout {
+            sequence: 30
+            slot: body
+        }
+        appearance {
+            template: @/blank-with-attributes-no-grid
+            templateOptions: #DEFAULT#
+        }
+        accessibility {
+            landmarkType: region
+        }
+        componentAppearance {
+            display: report
+        }
+        settings {
+            name: NAME
+            statusMessage: STATUS_MESSAGE
+            processId: PROCESS_ID
+            state: STATE
+            appUser: &APP_USER.
+        }
+        plugin-generalSettings {
+            buttonIcon: fa-american-sign-language-interpreting
+            wsUrl: ws://localhost:8090/ws
+            maxVisible: 5
+        }
+
+        column NAME (
+            layout {
+                sequence: 20
+            }
+            source {
+                databaseColumn: NAME
+                dataType: varchar2
+            }
+        )
+
+        column PROCESS_ID (
+            layout {
+                sequence: 10
+            }
+            source {
+                databaseColumn: PROCESS_ID
+                dataType: varchar2
+            }
+        )
+
+        column STATE (
+            layout {
+                sequence: 40
+            }
+            source {
+                databaseColumn: STATE
+                dataType: varchar2
+            }
+        )
+
+        column STATUS_MESSAGE (
+            layout {
+                sequence: 30
+            }
+            source {
+                databaseColumn: STATUS_MESSAGE
+                dataType: varchar2
+            }
+        )
+
+    )
+
+    pageItem P5000_NEW (
+        type: textField
+        label {
+            label: New
+            alignment: left
+        }
+        layout {
+            sequence: 10
+            slot: body
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+        }
+    )
+
+)
+

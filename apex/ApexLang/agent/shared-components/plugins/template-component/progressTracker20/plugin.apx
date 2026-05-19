@@ -1,0 +1,99 @@
+plugin progressTracker20 (
+    name: Progress Tracker 2.0
+    staticId: DEV.PROGRESS_TRACKER
+    templateComponent {
+        availableAs: report
+        partial:
+            ```html
+            <div class="progress-item__body">
+               <div class="progress-item__name">#NAME#</div>
+               <div class="progress-item__status">#STATUS_MESSAGE#</div>
+            </div>
+            ```
+        reportBody:
+            ```html
+            <div class="progress-container"
+                 data-ws-url="#WS_URL#"
+                 data-app-user="#APP_USER#"
+                 data-show-all-url="#SHOW_ALL_URL#"
+                 data-max-visible="#MAX_VISIBLE#">
+            
+               <!-- Big (main) button -->
+               <button type="button"
+                       class="progress-main shadow"
+                       style="background-color: #BG_COLOR#;"
+                       aria-haspopup="true"
+                       aria-expanded="false"
+                       aria-label="#PROGRESS_LABEL!ATTR#">
+                  <span class="progress-main__content">
+                     <span class="fa #BUTTON_ICON#" style="color: #ICON_COLOR#;" aria-hidden="true"></span>
+                  </span>
+                  <span class="progress-badge" aria-hidden="true"></span>
+                  <span class="sr-only" data-progress-count></span>
+               </button>
+            
+               <!-- Rows rendered by APEX from the SQL query, wrapped in a flex column -->
+               <div class="progress-items"
+                    role="list"
+                    aria-label="#PROGRESS_LABEL!ATTR#">
+                  #APEX$ROWS#
+               </div>
+            
+               <!-- Polite live region for status changes (WCAG 4.1.3) -->
+               <div class="sr-only" aria-live="polite" aria-atomic="false" data-progress-live></div>
+            
+               <!-- Hidden row prototype: cloned by JS when a new process arrives via WS. -->
+               <template class="progress-item-tpl">
+                  <div class="progress-item shadow" role="listitem">
+                     <div class="progress-item__body">
+                        <div class="progress-item__name"></div>
+                        <div class="progress-item__status"></div>
+                     </div>
+                  </div>
+               </template>
+            
+               <!-- Hidden prototype for the "Show all" overflow row. -->
+               <template class="progress-showall-tpl">
+                  <div class="progress-item progress-item--show-all shadow" role="listitem">
+                     <a class="progress-item__link" href="" aria-label="Show all running processes">
+                        <div class="progress-item__body">
+                           <div class="progress-item__name">Show all</div>
+                           <div class="progress-item__status">Open overview</div>
+                        </div>
+                     </a>
+                  </div>
+               </template>
+            </div>
+            
+            ```
+        reportRow:
+            ```html
+            <div class="progress-item shadow state-#STATE#"
+                 role="listitem"
+                 data-process-id="#PROCESS_ID#"
+                 data-state="#STATE#"
+                 render="#RENDER#"
+                 aria-label="#NAME!ATTR# - #STATUS_MESSAGE!ATTR# (#STATE#)"
+                 #APEX$ROW_IDENTIFICATION#>
+               #APEX$PARTIAL#
+            </div>
+            ```
+        numberOfLazyLoadingSkeletons: 3
+    }
+    component {
+        standardAttributes: regionTemplateAttr
+    }
+    css {
+        fileUrls: #PLUGIN_FILES#progress_tracker#MIN#.css
+    }
+    javaScript {
+        fileUrls: [
+            #PLUGIN_FILES#progress_tracker#MIN#.js
+            #PLUGIN_FILES#progress_fab_bridge.js
+        ]
+    }
+    information {
+        version: 2.0
+    }
+)
+
