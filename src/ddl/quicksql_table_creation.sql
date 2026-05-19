@@ -7,7 +7,8 @@ create table ai_services (
     identifier     varchar2(30 char) not null,
     description    varchar2(4000 char),
     base_url       varchar2(255 char) not null,
-    model          varchar2(200 char) not null
+    model          varchar2(200 char) not null,
+    apex_ws_cred_static_id  varchar2(200) 
 );
 
 

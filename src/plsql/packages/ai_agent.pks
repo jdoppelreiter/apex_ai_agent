@@ -28,7 +28,7 @@ create or replace package ai_agent as
                          , p_prompt              clob );
 
   procedure start_run( p_ai_conversation_id  ai_conversations.ai_conversation_id%type
-                     , p_prompt              clob ;
+                     , p_prompt              clob );
   
 end ai_agent;
 /
