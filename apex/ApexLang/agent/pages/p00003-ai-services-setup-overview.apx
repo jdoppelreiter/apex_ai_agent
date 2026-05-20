@@ -1,0 +1,170 @@
+page 3 (
+    name: AI Services Setup Overview
+    alias: AI-SERVICES-SETUP-OVERVIEW
+    title: AI Services Setup Overview
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region ai-services-setup-overview (
+        name: AI Services Setup Overview
+        type: classicReport
+        source {
+            location: localDatabase
+            tableName: AI_SERVICES
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--scrollBody
+            ]
+        }
+        componentAppearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--stretch
+                t-Report--staticRowColors
+                t-Report--rowHighlight
+                t-Report--inline
+                t-Report--hideNoPagination
+            ]
+        }
+        messages {
+            whenNoDataFound: No data found.
+        }
+
+        column AI_SERVICE_ID (
+            reportColumnQueryId: 1
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 0
+            }
+        )
+
+        column APEX_WS_CRED_STATIC_ID (
+            reportColumnQueryId: 7
+            derivedColumn: N
+            heading {
+                heading: Apex Ws Cred Static ID
+            }
+            layout {
+                sequence: 7
+            }
+            sorting {
+                defaultSequence: 1
+            }
+        )
+
+        column BASE_URL (
+            reportColumnQueryId: 5
+            derivedColumn: N
+            heading {
+                heading: Base URL
+            }
+            layout {
+                sequence: 5
+            }
+            sorting {
+                defaultSequence: 1
+            }
+        )
+
+        column DESCRIPTION (
+            reportColumnQueryId: 4
+            derivedColumn: N
+            heading {
+                heading: Description
+            }
+            layout {
+                sequence: 4
+            }
+            sorting {
+                defaultSequence: 1
+            }
+        )
+
+        column IDENTIFIER (
+            reportColumnQueryId: 3
+            derivedColumn: N
+            heading {
+                heading: Identifier
+            }
+            layout {
+                sequence: 3
+            }
+            sorting {
+                defaultSequence: 1
+            }
+        )
+
+        column MODEL (
+            reportColumnQueryId: 6
+            derivedColumn: N
+            heading {
+                heading: Model
+            }
+            layout {
+                sequence: 6
+            }
+            sorting {
+                defaultSequence: 1
+            }
+        )
+
+        column NAME (
+            reportColumnQueryId: 2
+            derivedColumn: N
+            heading {
+                heading: Name
+            }
+            layout {
+                sequence: 2
+            }
+            sorting {
+                defaultSequence: 1
+            }
+        )
+
+    )
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+)
+

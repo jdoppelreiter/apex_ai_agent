@@ -8,6 +8,16 @@ file "css/dark/custom_styles.min.css" (
     charSet: utf-8
 )
 
+file "css/light/custom_styles.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "css/light/custom_styles.min.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
 file "fonts/Poppins-700.eot" (
     mimeType: application/vnd.ms-fontobject
     charSet: utf-8

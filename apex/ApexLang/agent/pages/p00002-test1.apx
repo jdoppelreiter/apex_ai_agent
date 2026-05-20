@@ -1,0 +1,166 @@
+page 2 (
+    name: test
+    alias: TEST1
+    title: test
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    javaScript {
+        executeWhenPageLoads:
+            ```javascript-browser
+                $(document).on('click', '.t-Report-cell', function() {
+                    $(this).closest('tbody').find('tr.highlighted-row').removeClass('highlighted-row');
+                    $(this).closest('tr').addClass('highlighted-row');
+                });
+            ```
+    }
+    css {
+        inline:
+            ```css
+            .highlighted-row {
+              background-color:green;
+            }
+            ```
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region new (
+        name: New
+        type: classicReport
+        source {
+            location: localDatabase
+            tableName: AI_SERVICES
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+        componentAppearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--altRowsDefault
+                t-Report--rowHighlightOff
+            ]
+        }
+
+        column AI_SERVICE_ID (
+            reportColumnQueryId: 1
+            derivedColumn: N
+            heading {
+                heading: Ai Service Id
+                alignment: end
+            }
+            layout {
+                sequence: 10
+                columnAlignment: end
+            }
+        )
+
+        column APEX_WS_CRED_STATIC_ID (
+            reportColumnQueryId: 7
+            derivedColumn: N
+            heading {
+                heading: Apex Ws Cred Static Id
+            }
+            layout {
+                sequence: 70
+            }
+        )
+
+        column BASE_URL (
+            reportColumnQueryId: 5
+            derivedColumn: N
+            heading {
+                heading: Base Url
+            }
+            layout {
+                sequence: 50
+            }
+        )
+
+        column DESCRIPTION (
+            reportColumnQueryId: 4
+            derivedColumn: N
+            heading {
+                heading: Description
+            }
+            layout {
+                sequence: 40
+            }
+        )
+
+        column IDENTIFIER (
+            reportColumnQueryId: 3
+            derivedColumn: N
+            heading {
+                heading: Identifier
+            }
+            layout {
+                sequence: 30
+            }
+        )
+
+        column MODEL (
+            reportColumnQueryId: 6
+            derivedColumn: N
+            heading {
+                heading: Model
+            }
+            layout {
+                sequence: 60
+            }
+        )
+
+        column NAME (
+            reportColumnQueryId: 2
+            derivedColumn: N
+            heading {
+                heading: Name
+            }
+            layout {
+                sequence: 20
+            }
+        )
+
+    )
+
+)
+

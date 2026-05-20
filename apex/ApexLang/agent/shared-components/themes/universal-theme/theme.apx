@@ -1,7 +1,7 @@
 theme universal-theme (
     name: Universal Theme
     themeNumber: 42
-    baseTheme: ut-24.2
+    baseTheme: ut-26.1
     style {
         currentThemeStyle: @tech-dark
     }
@@ -50,7 +50,7 @@ theme universal-theme (
         library: fontApex
     }
     advanced {
-        filePrefix: #APEX_FILES#themes/theme_42/24.2/
+        filePrefix: #APEX_FILES#themes/theme_42/26.1/
         identifier: UNIVERSAL_THEME
     }
 
@@ -64,8 +64,26 @@ theme universal-theme (
         }
         themeRollerAttributes {
             inputParameterFileUrls: #THEME_FILES#less/theme/Vita-Dark.less
-            outputCssFileUrl: #THEME_DB_FILES#9240199621002640.css
+            outputCssFileUrl: #THEME_DB_FILES#6404356705946810.css
             jsonConfig: "{\"classes\":[],\"vars\":{\"@g_Accent-BG\":\"#055f76\",\"@g_Accent-OG\":\"#181414\",\"@g_Danger-BG\":\"#f87171\",\"@g_Danger-FG\":\"#ffffff\",\"@g_Warning-BG\":\"#fbbf24\",\"@g_Warning-FG\":\"#000000\",\"@g_Success-BG\":\"#198960\",\"@g_Success-FG\":\"#ffffff\",\"@g_Info-BG\":\"#38bdf8\",\"@g_Info-FG\":\"#ffffff\",\"@g_Region-Header-BG\":\"#111d2b\",\"@g_Region-Header-FG\":\"#f0f6ff\",\"@g_Region-BG\":\"#111d2b\",\"@g_Region-FG\":\"#e7fbff\",\"@g_Container-BorderRadius\":\"10px\",\"@g_Body-Content-Max-Width\":\"1440px\",\"@g_Button-BorderRadius\":\"8px\",\"@g_Link-Base\":\"#0cbbe7\",\"@g_Nav-BG\":\"#060d14\",\"@g_Nav-FG\":\"#d4d8d9\",\"@g_Nav-Active-BG\":\"#055f76\",\"@g_Nav-Active-FG\":\"#f2f2f2\"},\"customCSS\":\"\",\"useCustomLess\":\"N\"}"
+        }
+        advanced {
+            endUserCanPick: true
+        }
+    )
+
+    style tech-light (
+        name: Tech Light
+        css {
+            fileUrls: [
+                #APP_FILES#css/light/custom_styles#MIN#.css
+                #APP_FILES#fonts/font.css
+            ]
+        }
+        themeRollerAttributes {
+            inputParameterFileUrls: #THEME_FILES#less/theme/Vita.less
+            outputCssFileUrl: #THEME_DB_FILES#6404414027946812.css
+            jsonConfig: "{\"classes\":[],\"vars\":{\"@g_Accent-BG\":\"#067793\",\"@g_Accent-OG\":\"#ffffff\",\"@g_Danger-BG\":\"#dc2626\",\"@g_Danger-FG\":\"#ffffff\",\"@g_Warning-BG\":\"#d97706\",\"@g_Warning-FG\":\"#ffffff\",\"@g_Success-BG\":\"#16a34a\",\"@g_Success-FG\":\"#ffffff\",\"@g_Info-BG\":\"#0284c7\",\"@g_Info-FG\":\"#ffffff\",\"@g_Region-Header-BG\":\"#f1f5f9\",\"@g_Region-Header-FG\":\"#0b1e33\",\"@g_Region-BG\":\"#ffffff\",\"@g_Region-FG\":\"#0b1e33\",\"@g_Container-BorderRadius\":\"10px\",\"@g_Body-Content-Max-Width\":\"1440px\",\"@g_Button-BorderRadius\":\"8px\",\"@g_Link-Base\":\"#055f76\",\"@g_Nav-BG\":\"#ffffff\",\"@g_Nav-FG\":\"#0b1e33\",\"@g_Nav-Active-BG\":\"#067793\",\"@g_Nav-Active-FG\":\"#ffffff\"},\"customCSS\":\"\",\"useCustomLess\":\"N\"}"
         }
         advanced {
             endUserCanPick: true

@@ -14,6 +14,19 @@ breadcrumb breadcrumb (
         }
     )
 
+    entry ai-services-setup-overview (
+        name: AI Services Setup Overview
+        pageNumber: 3
+        execution {
+            sequence: 10
+        }
+        link {
+            target: {
+                page: 3
+            }
+        }
+    )
+
     entry conversation-history (
         name: Conversation History
         pageNumber: 310
@@ -65,6 +78,19 @@ breadcrumb breadcrumb (
         link {
             target: {
                 page: 50
+            }
+        }
+    )
+
+    entry test (
+        name: test
+        pageNumber: 2
+        execution {
+            sequence: 10
+        }
+        link {
+            target: {
+                page: 2
             }
         }
     )

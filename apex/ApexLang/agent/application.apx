@@ -1,5 +1,8 @@
-app AGENT (
+app AGENT106 (
     name: YAAA (Yet another AI Agent)
+    genAI {
+        service: @openai
+    }
     logo {
         type: text
         text: YAAA
@@ -52,12 +55,6 @@ app AGENT (
     runtime {
         allowFeedback: true
         compatibilityMode: 24.2
-    }
-    availability {
-        status: available
-    }
-    advanced {
-        modernizeApp: true
     }
 
     substitution APP_NAME (

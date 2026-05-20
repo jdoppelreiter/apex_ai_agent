@@ -1,0 +1,177 @@
+:root {
+
+    /* Brand scale (shared with dark theme) */
+    --t0:  hsl(192, 72%, 93%); --t1: hsl(192, 71%, 82%); --t2: hsl(192, 72%, 71%);
+    --t3:  hsl(192, 71%, 59%); --t4: hsl(192, 71%, 50%); --t5: hsl(192, 90%, 37%);
+    --t6:  hsl(192, 92%, 30%);
+    --t7:  hsl(192, 92%, 24%); /* BRAND */
+    --t8: hsl(192, 92%, 19%); --t9: hsl(192, 90%, 12%);
+
+    /* Accent scale */
+    --i4: hsl(234, 89%, 74%); --i5: hsl(239, 84%, 67%); --i6: hsl(243, 75%, 59%);
+
+    /* Support light scale */
+    --bg:       #f5f8fb;
+    --s1:       #ffffff;
+    --s2:       #f1f5f9;
+    --s3:       #e8eef5;
+    --s4:       #dde6f0;
+    --border:   rgba(15, 30, 50, .08);
+    --border-m: rgba(15, 30, 50, .14);
+
+    /* Text */
+    --tx1: #0b1e33;
+    --tx2: #4a5c70;
+    --tx3: #8ba0b6;
+
+    /* ---------------- APEX SETTINGS ---------------- */
+    --ut-palette-primary: #067793;
+    --ut-palette-primary-shade: #055f76;
+    --ut-palette-primary-tint: #0a9ab5;
+    --ut-palette-primary-bg: rgba(6,119,147, .08);
+    --ut-body-background-color: #f5f8fb !important;
+    --ut-region-background: #ffffff;
+    --ut-region-header-background: #f1f5f9;
+    --ut-border-color: rgba(15,30,50, .08);
+
+    --ut-base-font: 'Inter', system-ui, sans-serif;
+    --ut-body-text-color: var(--tx1);
+    --ut-body-text-color-secondary: #4a5c70;
+
+    --ut-border-radius: 12px;
+    --ut-field-border-radius: 8px;
+    --ut-shadow: 0 4px 20px rgba(15,30,50, .08);
+
+     /* ---------------- FONT SETTINGS ---------------- */
+    --ut-base-font-family: Poppins;
+    --ut-hero-region-line-height: 2rem;
+    --ut-region-font-size: 1rem;
+    --ut-region-line-height: 1.8rem;
+    --ut-component-text-muted-color: var(--tx2);
+    --ut-region-text-color: var(--tx1);
+}
+
+/* no aria-tags */
+#apexCBMDummySelection { display: none !important; }
+
+body {
+    background: radial-gradient(ellipse 80% 50% at 20% -10%, rgba(6,119,147,.10) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 85% 10%, rgba(99,102,241,.07) 0%, transparent 55%),
+                radial-gradient(ellipse 50% 50% at 50% 100%, rgba(6,119,147,.05) 0%, transparent 60%),
+                var(--bg);
+}
+
+#t_PageBody,.t-Drawer-page,.t-Dialog  {
+
+    /* ---------------- Headers ---------------- */
+    .t-Body-title {
+      position: unset;
+      background: transparent;
+      text-align: center;
+      color: var(--tx1);
+    }
+
+    /* ---------------- APEX ITEMS ---------------- */
+    .apex-item-text,
+    .apex-item-select,
+    .apex-item-textarea {
+      background: var(--s1);
+      border-color: rgba(15,
+          30,
+          50, .12);
+      color: var(--tx1);
+      border-radius: 8px;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .apex-item-text:focus,
+    .apex-item-select:focus {
+      border-color: #067793;
+      box-shadow: 0 0 0 3px rgba(6,
+          119,
+          147, .18),
+        0 0 14px rgba(6,
+          119,
+          147, .10) !important;
+    }
+
+    /* ---------------- HEADERS ---------------- */
+    .t-Header {
+      background: rgba(255,255,255, .8);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(15,30,50, .08);
+      box-shadow: none;
+    }
+
+    .t-Region-header {
+        background: rgba(15,30,50, .025);
+    }
+
+    .t-Body {
+
+        .t-Region {
+           border-left: 3px solid var(--t6);
+        }
+
+        .t-HeroRegion {
+            background: var(--s1);
+            margin-bottom: 2rem;
+            padding: 2rem 2rem 1.8rem;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+
+            &::before {
+                content: '';
+                position: absolute; inset: 0;
+                background:
+                    radial-gradient(ellipse 70% 80% at 0% 0%, rgba(6, 119, 147, .12) 0%, transparent 60%),
+                    radial-gradient(ellipse 50% 60% at 100% 100%, rgba(99, 102, 241, .08) 0%, transparent 60%);
+                pointer-events: none;
+            }
+
+            h1 {
+                background: linear-gradient(90deg, var(--t7), var(--t6), var(--i6));
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                display: block;
+                width: fit-content;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* ---------------- BUTTONS ---------------- */
+        .t-Button {
+          display: inline-flex;
+          align-items: center; gap: 7px;
+          padding: 9px 20px;
+          font-size: 0.875rem; font-weight: 700;
+          border: none; cursor: pointer;
+          transition: all .15s;
+          position: relative; overflow: hidden;
+          text-decoration: none;
+        }
+    }
+
+  .a-CardView {
+    border-radius: 20px;
+  }
+
+  .ck-content pre {
+    color: var(--tx1);
+    background: var(--s2);
+  }
+
+}
+
+/* Navigation Adaptions */
+.t-Header-nav-list > ul {
+  justify-content: center;
+}
+
+@media (max-width: 767px) {
+  .t-Header-nav-list {
+    display: none !important;
+  }
+}
