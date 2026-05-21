@@ -12,7 +12,7 @@ create or replace package body ai_tool as
   as
     l_content CLOB;
   begin
-    /*
+    
     return q'§23 APEX_DEBUG
                 The APEX_DEBUG package provides utility functions for managing the debug message log. Specifically, this package provides the necessary APIs to instrument and debug PL/SQL code contained within your Oracle APEX application as well as PL/SQL code in database stored procedures and functions. Instrumenting your PL/SQL code makes it much easier to track down bugs and isolate unexpected behavior more quickly.
 
@@ -47,7 +47,10 @@ create or replace package body ai_tool as
                       TOCHAR Function
                       TRACE Procedure
                       WARN Procedure§';
-    */
+      RETURN TRIM(l_content);
+    
+
+    apex_debug.info('p_url: %s',p_url );
     l_content := APEX_WEB_SERVICE.make_rest_request(
                     p_url => p_url,
                     p_http_method => 'GET');

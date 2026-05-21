@@ -85,9 +85,18 @@
       });
    }
 
+   function dbg(msg) {
+      if (window.apex && window.apex.debug) {
+         apex.debug.info('progress-fab-bridge: ' + msg);
+      }
+   }
+
    function run () {
+      dbg('run() called, readyState=' + document.readyState);
+
       var fab = document.querySelector('.fab-container');
       if (!fab) {
+         dbg('run() no .fab-container found - progress stays standalone');
          // No FAB on this page - the progress tracker stays standalone.
          // Reveal it so the CSS visibility:hidden default no longer
          // applies. Without this the big button stays invisible
@@ -95,20 +104,26 @@
          markStandaloneReady();
          return;
       }
+      dbg('run() .fab-container found, id=' + (fab.id || '(none)'));
+
       // Only bridge an UN-merged .progress-container. After the
       // first bridge, the standalone container is .is-merged; APEX
       // refresh will produce a fresh, un-merged one.
       var progress = document.querySelector('.progress-container:not(.is-merged)');
       if (!progress) {
+         dbg('run() no un-merged .progress-container found - nothing to bridge');
          // Nothing to bridge - any leftover containers (shouldn't
          // happen, but be safe) get revealed as standalone.
          markStandaloneReady();
          return;
       }
+      dbg('run() .progress-container found, wsUrl=' + (progress.dataset.wsUrl || '(none)') +
+          ', appUser=' + (progress.dataset.appUser || '(none)'));
 
       var subButtons = fab.querySelector('.sub-buttons');
       var fabBtn     = fab.querySelector('.fab');
       if (!subButtons || !fabBtn) {
+         dbg('run() FAB inner pieces not ready (subButtons=' + !!subButtons + ', fabBtn=' + !!fabBtn + ') - deferring');
          // FAB element exists but its inner pieces aren't ready yet.
          // Reveal the standalone so the user isn't staring at a blank
          // corner. The next apex event run will retry the bridge.
@@ -120,12 +135,14 @@
       //    so progress_tracker.js uses the FAB as its root. On a
       //    re-bridge, this also picks up any changed values.
       syncAttrs(progress, fab);
+      dbg('run() step 1: synced data-* attrs to FAB');
 
       // 2) Badge -> on the FAB main button (replace any prior badge).
       replaceChildBySelector(
          fabBtn, '.progress-badge',
          progress.querySelector('.progress-badge')
       );
+      dbg('run() step 2: moved .progress-badge to fabBtn');
 
       // 3) sr-only count -> inside the FAB main button so it joins
       //    the button's accessible name.
@@ -133,6 +150,7 @@
          fabBtn, '[data-progress-count]',
          progress.querySelector('[data-progress-count]')
       );
+      dbg('run() step 3: moved [data-progress-count] to fabBtn');
 
       // 4) Polite live region -> on the FAB so updates announce
       //    while the user interacts with the FAB.
@@ -140,6 +158,7 @@
          fab, '[data-progress-live]',
          progress.querySelector('[data-progress-live]')
       );
+      dbg('run() step 4: moved [data-progress-live] to FAB');
 
       // 5) .progress-items wrapper -> first child of .sub-buttons.
       //    With .sub-buttons being column-reverse, DOM[0] is the
@@ -150,14 +169,21 @@
       if (newItems) {
          var oldItems = subButtons.querySelector('.progress-items');
          if (oldItems && oldItems !== newItems) {
+            dbg('run() step 5: removing stale .progress-items from subButtons');
             oldItems.parentNode.removeChild(oldItems);
          }
          if (newItems.parentNode !== subButtons) {
             subButtons.insertBefore(newItems, subButtons.firstChild);
+            dbg('run() step 5: inserted .progress-items as first child of subButtons');
          } else if (newItems !== subButtons.firstChild) {
             // re-pin to DOM[0] (visual bottom) in case other code shifted it
             subButtons.insertBefore(newItems, subButtons.firstChild);
+            dbg('run() step 5: re-pinned .progress-items to DOM[0] of subButtons');
+         } else {
+            dbg('run() step 5: .progress-items already in correct position');
          }
+      } else {
+         dbg('run() step 5: no .progress-items found in .progress-container');
       }
 
       // 6) Templates -> on the FAB so progress_tracker.js can clone
@@ -170,18 +196,21 @@
          fab, 'template.progress-showall-tpl',
          progress.querySelector('template.progress-showall-tpl')
       );
+      dbg('run() step 6: moved <template> elements to FAB');
 
       // 7) Tag the FAB so:
       //      - progress_tracker.js bootstraps on it (CONTAINER_SEL match)
       //      - progress_fab_bridge.css can size the menu wider / taller
       fab.classList.add('has-progress');
       fab.dataset.progressBridged = '1';
+      dbg('run() step 7: added .has-progress to FAB');
 
       // 8) Hide the now-empty standalone .progress-container. The
       //    .is-merged class makes it `display: none` AND excludes it
       //    from progress_tracker.js's CONTAINER_SEL, so we don't
       //    double-init or write rows into a detached subtree.
       progress.classList.add('is-merged');
+      dbg('run() step 8: added .is-merged to .progress-container');
 
       // 9) On a re-bridge (APEX refresh), the badge count / show-all
       //    overflow row need to be recomputed against the freshly
@@ -190,24 +219,32 @@
       //    tracker hasn't booted), tracker's own boot() runs layout()
       //    so we don't need to.
       if (window.__progressTracker && typeof window.__progressTracker.layout === 'function') {
-         try { window.__progressTracker.layout(fab); }
-         catch (e) { /* tracker may not be ready - safe to ignore */ }
+         try {
+            window.__progressTracker.layout(fab);
+            dbg('run() step 9: called __progressTracker.layout() on FAB');
+         } catch (e) {
+            dbg('run() step 9: __progressTracker.layout() threw: ' + e);
+         }
+      } else {
+         dbg('run() step 9: __progressTracker.layout not available yet (first init)');
       }
+
+      dbg('run() bridge complete');
    }
 
-   if (document.readyState === 'loading') {
+   // In APEX 26.1, templateReportRegionInit reads the .progress-container
+   // DOM to build its model data. Running the bridge at DOMContentLoaded
+   // (before the jQuery-ready queue where APEX inits regions) gutted the
+   // container first, causing "Invalid model data" in modelViewBase.
+   // Fix: on APEX pages, wait for apexreadyend (after all regions are
+   // initialized) before the first bridge run. apexafterrefresh covers
+   // subsequent region refreshes. On non-APEX pages, DOMContentLoaded
+   // is the only signal available so we keep that fallback.
+   if (window.apex && window.apex.jQuery) {
+      window.apex.jQuery(document).on('apexreadyend apexafterrefresh', run);
+   } else if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', run);
    } else {
       run();
-   }
-
-   // Re-bridge on APEX refresh: when the .progress-container Template
-   // Component is refreshed, APEX rewrites the entire region body and
-   // a fresh, un-merged .progress-container appears. We replay the
-   // bridge so the FAB takes ownership of the new wrapper / badge /
-   // templates, the stale ones are discarded, and the new container
-   // gets .is-merged so progress_tracker.js doesn't double-init.
-   if (window.apex && window.apex.jQuery) {
-      window.apex.jQuery(document).on('apexafterrefresh apexreadyend', run);
    }
 })();
